@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import { siteConfig, nav } from '../config/site';
+import { url, isCurrent } from '../lib/url';
 
 interface Props {
   title?: string;
@@ -12,7 +13,7 @@ const pageTitle = title
   ? `${title} · ${siteConfig.name}`
   : `${siteConfig.name} — ${siteConfig.tagline}`;
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
-const currentPath = Astro.url.pathname.replace(/\/+$/, '') || '/';
+const pathname = Astro.url.pathname;
 ---
 
 <!doctype html>
@@ -20,13 +21,14 @@ const currentPath = Astro.url.pathname.replace(/\/+$/, '') || '/';
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="icon" type="image/svg+xml" href={`${import.meta.env.BASE_URL}favicon.svg`} />
+    <link rel="icon" type="image/svg+xml" href={url('/favicon.svg')} />
 
     <title>{pageTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
 
     <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={siteConfig.name} />
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
@@ -34,7 +36,7 @@ const currentPath = Astro.url.pathname.replace(/\/+$/, '') || '/';
     <meta name="twitter:card" content="summary_large_image" />
   </head>
 
-  <body class="bg-ink text-bone min-h-screen antialiased">
+  <body class="bg-ink text-bone flex min-h-screen flex-col antialiased">
     <a
       href="#main"
       class="focus:bg-accent focus:text-ink sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:rounded focus:px-4 focus:py-2"
@@ -47,7 +49,7 @@ const currentPath = Astro.url.pathname.replace(/\/+$/, '') || '/';
         class="mx-auto flex max-w-6xl items-center justify-between px-6 py-5"
         aria-label="Principal"
       >
-        <a href={import.meta.env.BASE_URL} class="font-display text-xl tracking-tight">
+        <a href={url('/')} class="font-display text-xl tracking-tight">
           {siteConfig.name}
         </a>
         <ul class="hidden gap-8 text-sm md:flex">
@@ -55,9 +57,9 @@ const currentPath = Astro.url.pathname.replace(/\/+$/, '') || '/';
             nav.map((item) => (
               <li>
                 <a
-                  href={item.href}
+                  href={url(item.href)}
                   class="hover:text-accent transition-colors"
-                  aria-current={currentPath === item.href ? 'page' : undefined}
+                  aria-current={isCurrent(pathname, item.href) ? 'page' : undefined}
                 >
                   {item.label}
                 </a>
@@ -68,7 +70,7 @@ const currentPath = Astro.url.pathname.replace(/\/+$/, '') || '/';
       </nav>
     </header>
 
-    <main id="main">
+    <main id="main" class="flex-1">
       <slot />
     </main>
 
@@ -78,8 +80,8 @@ const currentPath = Astro.url.pathname.replace(/\/+$/, '') || '/';
       >
         <p>© {new Date().getFullYear()} {siteConfig.legalName}</p>
         <ul class="flex gap-6">
-          <li><a href="/aviso-legal" class="hover:text-accent">Aviso legal</a></li>
-          <li><a href="/privacidad" class="hover:text-accent">Privacidad</a></li>
+          <li><a href={url('/aviso-legal')} class="hover:text-accent">Aviso legal</a></li>
+          <li><a href={url('/privacidad')} class="hover:text-accent">Privacidad</a></li>
         </ul>
       </div>
     </footer>

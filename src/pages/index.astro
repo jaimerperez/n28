@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import { siteConfig } from '../config/site';
+import { url } from '../lib/url';
 ---
 
 <Layout>
@@ -13,7 +14,7 @@ import { siteConfig } from '../config/site';
       {siteConfig.description}
     </p>
     <a
-      href="/contacto"
+      href={url('/contacto')}
       class="bg-accent text-ink mt-10 inline-block rounded px-6 py-3 font-medium transition-opacity hover:opacity-90"
     >
       Reservar sesión

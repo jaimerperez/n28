@@ -1,6 +1,6 @@
 # videobook-web
 
-Sitio web corporativo de **NOMBRE_EMPRESA**, estudio de videobooks y grabaciones para actores.
+Sitio web corporativo de **n28**, estudio de videobooks y grabaciones para actores.
 
 Sitio estático construido con Astro y desplegado en GitHub Pages mediante una cadena
 completa de CI/CD. El repositorio se usa también como banco de pruebas de prácticas

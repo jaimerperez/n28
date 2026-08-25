@@ -1,0 +1,56 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+# Un PR que recibe varios push seguidos cancela las ejecuciones anteriores:
+# ahorra minutos y evita que un check obsoleto marque el PR como verde.
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: Formato, lint, tipos y build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Descargar el repositorio
+        uses: actions/checkout@v5
+
+      - name: Preparar Node
+        uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Comprobar formato
+        run: npm run format:check
+
+      - name: Lint de JavaScript y TypeScript
+        run: npm run lint:js
+
+      - name: Lint de CSS
+        run: npm run lint:css
+
+      - name: Comprobación de tipos
+        run: npm run lint:types
+
+      - name: Build de producción
+        run: npm run build
+
+      - name: Publicar el build como artefacto
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist-${{ github.sha }}
+          path: dist/
+          retention-days: 7
