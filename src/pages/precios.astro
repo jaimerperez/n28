@@ -1,0 +1,43 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageHeader from '../components/PageHeader.astro';
+import { url } from '../lib/url';
+
+// TODO(n28): confirmar importes reales y qué incluye cada pack antes de publicar.
+const packs = [
+  { nombre: 'Self-tape', desde: null, detalle: 'Grabación puntual para una prueba de casting.' },
+  { nombre: 'Videobook', desde: null, detalle: 'Sesión completa con montaje y entrega en 4K.' },
+  { nombre: 'A medida', desde: null, detalle: 'Proyectos con necesidades específicas.' },
+];
+---
+
+<Layout title="Precios" description="Tarifas de videobooks, self-tapes y sesiones en n28.">
+  <PageHeader
+    eyebrow="Tarifas"
+    title="Precios"
+    lead="Cada proyecto es distinto. Escríbenos y te pasamos un presupuesto cerrado."
+  />
+
+  <section class="mx-auto grid max-w-6xl gap-6 px-6 pb-12 md:grid-cols-3">
+    {
+      packs.map((pack) => (
+        <article class="rounded-lg border border-white/10 p-6">
+          <h2 class="font-display text-2xl">{pack.nombre}</h2>
+          <p class="text-accent mt-2 text-lg">
+            {pack.desde ? `desde ${pack.desde} €` : 'Consultar'}
+          </p>
+          <p class="text-bone/70 mt-3 text-sm">{pack.detalle}</p>
+        </article>
+      ))
+    }
+  </section>
+
+  <section class="mx-auto max-w-6xl px-6">
+    <a
+      href={url('/contacto')}
+      class="bg-accent text-ink inline-block rounded px-6 py-3 font-medium transition-opacity hover:opacity-90"
+    >
+      Pedir presupuesto
+    </a>
+  </section>
+</Layout>

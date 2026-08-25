@@ -1,0 +1,14 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { url } from '../lib/url';
+---
+
+<Layout title="Mensaje enviado" description="Hemos recibido tu mensaje.">
+  <section class="mx-auto max-w-6xl px-6 py-24 text-center md:py-32">
+    <h1 class="font-display text-3xl">Mensaje enviado</h1>
+    <p class="text-bone/70 mt-4">Te respondemos lo antes posible.</p>
+    <a href={url('/')} class="text-accent mt-8 inline-block underline underline-offset-4">
+      Volver al inicio
+    </a>
+  </section>
+</Layout>

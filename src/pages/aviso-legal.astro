@@ -1,0 +1,66 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageHeader from '../components/PageHeader.astro';
+import { siteConfig } from '../config/site';
+
+// TODO(n28): completar con los datos fiscales reales antes de publicar.
+// Son obligatorios segun el art. 10 de la LSSI-CE.
+const titular = {
+  denominacion: '«PENDIENTE: razón social»',
+  nif: '«PENDIENTE: NIF/CIF»',
+  domicilio: '«PENDIENTE: domicilio social»',
+  registro: '«PENDIENTE: datos registrales, si procede»',
+};
+---
+
+<Layout title="Aviso legal" description="Aviso legal e información del titular del sitio web.">
+  <PageHeader title="Aviso legal" />
+
+  <section class="text-bone/70 mx-auto max-w-3xl space-y-8 px-6 pb-12 leading-relaxed">
+    <div>
+      <h2 class="text-bone font-display mb-3 text-xl">Titular del sitio</h2>
+      <ul class="space-y-1">
+        <li><strong class="text-bone">Denominación:</strong> {titular.denominacion}</li>
+        <li><strong class="text-bone">NIF:</strong> {titular.nif}</li>
+        <li><strong class="text-bone">Domicilio:</strong> {titular.domicilio}</li>
+        <li><strong class="text-bone">Email:</strong> {siteConfig.email}</li>
+        <li><strong class="text-bone">Datos registrales:</strong> {titular.registro}</li>
+      </ul>
+    </div>
+
+    <div>
+      <h2 class="text-bone font-display mb-3 text-xl">Objeto</h2>
+      <p>
+        Este aviso legal regula el acceso y uso del sitio web de {siteConfig.name}. El acceso al
+        sitio atribuye la condición de usuario e implica la aceptación de las condiciones aquí
+        recogidas.
+      </p>
+    </div>
+
+    <div>
+      <h2 class="text-bone font-display mb-3 text-xl">Propiedad intelectual</h2>
+      <p>
+        Los contenidos del sitio, incluidas las piezas audiovisuales y fotografías, están protegidos
+        por la normativa de propiedad intelectual. Su reproducción o distribución sin autorización
+        expresa del titular no está permitida.
+      </p>
+    </div>
+
+    <div>
+      <h2 class="text-bone font-display mb-3 text-xl">Responsabilidad</h2>
+      <p>
+        El titular no se hace responsable del uso que terceros hagan de la información publicada, ni
+        de los daños derivados de su utilización. El sitio puede contener enlaces a sitios de
+        terceros sobre cuyos contenidos el titular no ejerce control.
+      </p>
+    </div>
+
+    <div>
+      <h2 class="text-bone font-display mb-3 text-xl">Legislación aplicable</h2>
+      <p>
+        Estas condiciones se rigen por la legislación española. Para cualquier controversia serán
+        competentes los juzgados y tribunales que correspondan conforme a derecho.
+      </p>
+    </div>
+  </section>
+</Layout>

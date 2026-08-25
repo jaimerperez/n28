@@ -1,0 +1,91 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageHeader from '../components/PageHeader.astro';
+import { siteConfig } from '../config/site';
+
+// TODO(n28): completar con los datos reales del responsable del tratamiento.
+const responsable = {
+  denominacion: '«PENDIENTE: razón social»',
+  nif: '«PENDIENTE: NIF/CIF»',
+  domicilio: '«PENDIENTE: domicilio social»',
+};
+---
+
+<Layout
+  title="Política de privacidad"
+  description="Cómo tratamos los datos personales que nos facilitas."
+>
+  <PageHeader title="Política de privacidad" />
+
+  <section class="text-bone/70 mx-auto max-w-3xl space-y-8 px-6 pb-12 leading-relaxed">
+    <div>
+      <h2 class="text-bone font-display mb-3 text-xl">Responsable del tratamiento</h2>
+      <ul class="space-y-1">
+        <li><strong class="text-bone">Responsable:</strong> {responsable.denominacion}</li>
+        <li><strong class="text-bone">NIF:</strong> {responsable.nif}</li>
+        <li><strong class="text-bone">Domicilio:</strong> {responsable.domicilio}</li>
+        <li><strong class="text-bone">Contacto:</strong> {siteConfig.email}</li>
+      </ul>
+    </div>
+
+    <div>
+      <h2 class="text-bone font-display mb-3 text-xl">Qué datos tratamos y con qué fin</h2>
+      <p>
+        Tratamos el nombre, el email y el contenido del mensaje que nos facilitas a través del
+        formulario de contacto, con la única finalidad de atender tu solicitud y enviarte un
+        presupuesto. No elaboramos perfiles ni tomamos decisiones automatizadas.
+      </p>
+    </div>
+
+    <div>
+      <h2 class="text-bone font-display mb-3 text-xl">Base legal</h2>
+      <p>
+        El tratamiento se basa en tu consentimiento, que otorgas al marcar la casilla de aceptación
+        antes de enviar el formulario, y en la aplicación de medidas precontractuales a petición
+        tuya.
+      </p>
+    </div>
+
+    <div>
+      <h2 class="text-bone font-display mb-3 text-xl">Conservación</h2>
+      <p>
+        Conservamos los datos el tiempo necesario para atender tu solicitud y, después, durante los
+        plazos legalmente exigibles para atender posibles responsabilidades.
+      </p>
+    </div>
+
+    <div>
+      <h2 class="text-bone font-display mb-3 text-xl">Destinatarios</h2>
+      <p>
+        El envío del formulario se procesa mediante Web3Forms, que actúa como encargado del
+        tratamiento y reenvía el mensaje a nuestro correo. El sitio se aloja en GitHub Pages. No
+        cedemos tus datos a otros terceros salvo obligación legal.
+      </p>
+    </div>
+
+    <div>
+      <h2 class="text-bone font-display mb-3 text-xl">Tus derechos</h2>
+      <p>
+        Puedes solicitar el acceso, la rectificación o la supresión de tus datos, así como la
+        limitación u oposición a su tratamiento y la portabilidad, escribiendo a
+        <a href={`mailto:${siteConfig.email}`} class="text-accent underline underline-offset-2">
+          {siteConfig.email}</a
+        >. Si consideras que tus derechos no han sido atendidos, puedes reclamar ante la Agencia
+        Española de Protección de Datos (<a
+          href="https://www.aepd.es"
+          rel="noopener"
+          class="text-accent underline underline-offset-2">aepd.es</a
+        >).
+      </p>
+    </div>
+
+    <div>
+      <h2 class="text-bone font-display mb-3 text-xl">Cookies</h2>
+      <p>
+        Este sitio no instala cookies propias de análisis ni de publicidad. Los vídeos incrustados
+        se sirven desde Vimeo con el seguimiento desactivado, y solo cargan cuando abres la página
+        que los contiene.
+      </p>
+    </div>
+  </section>
+</Layout>

@@ -1,0 +1,106 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageHeader from '../components/PageHeader.astro';
+import { siteConfig } from '../config/site';
+import { url } from '../lib/url';
+
+// Sin backend: Web3Forms reenvía el formulario por email.
+// La clave se inyecta en build desde el secreto WEB3FORMS_KEY del repositorio.
+const formKey = siteConfig.contactFormKey;
+---
+
+<Layout
+  title="Contacto"
+  description="Escríbenos para reservar una sesión de videobook o self-tape en Madrid."
+>
+  <PageHeader
+    eyebrow="Hablemos"
+    title="Contacto"
+    lead="Cuéntanos qué necesitas y te respondemos con un presupuesto cerrado."
+  />
+
+  <section class="mx-auto grid max-w-6xl gap-12 px-6 pb-12 md:grid-cols-2">
+    <form action="https://api.web3forms.com/submit" method="POST" class="space-y-5">
+      <input type="hidden" name="access_key" value={formKey} />
+      <input type="hidden" name="subject" value="Nueva solicitud desde n28.es" />
+      <input type="hidden" name="redirect" value={new URL(url('/gracias'), Astro.site).href} />
+      <!-- Trampa antispam: los bots la rellenan, las personas no la ven -->
+      <input type="checkbox" name="botcheck" class="hidden" style="display:none" tabindex="-1" />
+
+      <div>
+        <label for="nombre" class="mb-1.5 block text-sm">Nombre</label>
+        <input
+          id="nombre"
+          name="nombre"
+          type="text"
+          required
+          autocomplete="name"
+          class="focus:border-accent w-full rounded border border-white/15 bg-white/5 px-4 py-2.5 outline-none"
+        />
+      </div>
+
+      <div>
+        <label for="email" class="mb-1.5 block text-sm">Email</label>
+        <input
+          id="email"
+          name="email"
+          type="email"
+          required
+          autocomplete="email"
+          class="focus:border-accent w-full rounded border border-white/15 bg-white/5 px-4 py-2.5 outline-none"
+        />
+      </div>
+
+      <div>
+        <label for="mensaje" class="mb-1.5 block text-sm">Mensaje</label>
+        <textarea
+          id="mensaje"
+          name="mensaje"
+          rows="5"
+          required
+          class="focus:border-accent w-full rounded border border-white/15 bg-white/5 px-4 py-2.5 outline-none"
+        ></textarea>
+      </div>
+
+      <div class="flex gap-3">
+        <input
+          id="privacidad"
+          name="privacidad"
+          type="checkbox"
+          required
+          class="accent-accent mt-1"
+        />
+        <label for="privacidad" class="text-bone/70 text-sm">
+          He leído y acepto la
+          <a href={url('/privacidad')} class="text-accent underline underline-offset-2">
+            política de privacidad
+          </a>.
+        </label>
+      </div>
+
+      <button
+        type="submit"
+        class="bg-accent text-ink rounded px-6 py-3 font-medium transition-opacity hover:opacity-90"
+      >
+        Enviar
+      </button>
+    </form>
+
+    <aside class="text-bone/70 space-y-6">
+      <div>
+        <h2 class="text-bone mb-1 text-sm tracking-[0.15em] uppercase">Email</h2>
+        <a href={`mailto:${siteConfig.email}`} class="hover:text-accent">{siteConfig.email}</a>
+      </div>
+      <div>
+        <h2 class="text-bone mb-1 text-sm tracking-[0.15em] uppercase">Teléfono</h2>
+        <a href={`tel:${siteConfig.phone.replace(/\s/g, '')}`} class="hover:text-accent">
+          {siteConfig.phone}
+        </a>
+      </div>
+      <div>
+        <h2 class="text-bone mb-1 text-sm tracking-[0.15em] uppercase">Dónde estamos</h2>
+        <p>{siteConfig.city}</p>
+      </div>
+    </aside>
+  </section>
+</Layout>

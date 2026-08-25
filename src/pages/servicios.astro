@@ -1,0 +1,66 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageHeader from '../components/PageHeader.astro';
+import { url } from '../lib/url';
+
+// TODO(n28): sustituir por los servicios reales del estudio.
+const servicios = [
+  {
+    nombre: 'Videobook',
+    descripcion:
+      'Grabación de escenas para tu book de actor, con dirección durante la sesión y montaje final.',
+    incluye: ['Sesión en estudio', 'Dirección de actores', 'Montaje y etalonaje', 'Entrega en 4K'],
+  },
+  {
+    nombre: 'Self-tape',
+    descripcion: 'Grabación de pruebas para castings con entrega rápida en el formato que pidan.',
+    incluye: ['Lector en sala', 'Fondo neutro', 'Entrega en 24-48 h'],
+  },
+  {
+    nombre: 'Book fotográfico',
+    descripcion: 'Sesión de fotos de retrato para completar tu material de presentación.',
+    incluye: ['Cambios de vestuario', 'Retoque de las seleccionadas'],
+  },
+];
+---
+
+<Layout
+  title="Servicios"
+  description="Videobooks, self-tapes y book fotográfico para actores y actrices en Madrid."
+>
+  <PageHeader
+    eyebrow="Qué hacemos"
+    title="Servicios"
+    lead="Todo el proceso en un mismo sitio: grabación, dirección y postproducción."
+  />
+
+  <section class="mx-auto grid max-w-6xl gap-6 px-6 pb-12 md:grid-cols-3">
+    {
+      servicios.map((servicio) => (
+        <article class="rounded-lg border border-white/10 p-6">
+          <h2 class="font-display text-2xl">{servicio.nombre}</h2>
+          <p class="text-bone/70 mt-3">{servicio.descripcion}</p>
+          <ul class="text-bone/60 mt-5 space-y-1.5 text-sm">
+            {servicio.incluye.map((punto) => (
+              <li class="flex gap-2">
+                <span class="text-accent" aria-hidden="true">
+                  —
+                </span>
+                {punto}
+              </li>
+            ))}
+          </ul>
+        </article>
+      ))
+    }
+  </section>
+
+  <section class="mx-auto max-w-6xl px-6">
+    <a
+      href={url('/contacto')}
+      class="bg-accent text-ink inline-block rounded px-6 py-3 font-medium transition-opacity hover:opacity-90"
+    >
+      Pedir presupuesto
+    </a>
+  </section>
+</Layout>
