@@ -8,12 +8,12 @@ DevOps: cada fase del proyecto introduce una herramienta o práctica nueva.
 
 ## Stack
 
-| Capa | Tecnología |
-|---|---|
-| Generador | Astro 7 (salida estática, cero JS por defecto) |
-| Estilos | Tailwind CSS 4 |
-| Runtime de build | Node 22 (fijado en `.nvmrc`) |
-| Hosting | GitHub Pages |
+| Capa             | Tecnología                                     |
+| ---------------- | ---------------------------------------------- |
+| Generador        | Astro 7 (salida estática, cero JS por defecto) |
+| Estilos          | Tailwind CSS 4                                 |
+| Runtime de build | Node 22 (fijado en `.nvmrc`)                   |
+| Hosting          | GitHub Pages                                   |
 
 ## Desarrollo local
 
@@ -25,21 +25,21 @@ npm ci
 npm run dev        # servidor de desarrollo en http://localhost:4321
 ```
 
-| Comando | Descripción |
-|---|---|
-| `npm run dev` | Servidor de desarrollo con recarga en caliente |
-| `npm run build` | Build de producción a `dist/` |
-| `npm run preview` | Sirve `dist/` localmente |
+| Comando           | Descripción                                    |
+| ----------------- | ---------------------------------------------- |
+| `npm run dev`     | Servidor de desarrollo con recarga en caliente |
+| `npm run build`   | Build de producción a `dist/`                  |
+| `npm run preview` | Sirve `dist/` localmente                       |
 
 ## Configuración de build
 
 `astro.config.mjs` lee dos variables de entorno para soportar los dos escenarios
 de despliegue de GitHub Pages:
 
-| Variable | Dominio propio | Página de proyecto |
-|---|---|---|
-| `SITE_URL` | `https://ejemplo.com` | `https://usuario.github.io` |
-| `BASE_PATH` | `/` | `/videobook-web` |
+| Variable    | Dominio propio        | Página de proyecto          |
+| ----------- | --------------------- | --------------------------- |
+| `SITE_URL`  | `https://ejemplo.com` | `https://usuario.github.io` |
+| `BASE_PATH` | `/`                   | `/videobook-web`            |
 
 ## Decisiones de arquitectura
 

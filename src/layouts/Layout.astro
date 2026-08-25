@@ -8,7 +8,9 @@ interface Props {
 }
 
 const { title, description = siteConfig.description } = Astro.props;
-const pageTitle = title ? `${title} · ${siteConfig.name}` : `${siteConfig.name} — ${siteConfig.tagline}`;
+const pageTitle = title
+  ? `${title} · ${siteConfig.name}`
+  : `${siteConfig.name} — ${siteConfig.tagline}`;
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
 const currentPath = Astro.url.pathname.replace(/\/+$/, '') || '/';
 ---
@@ -32,16 +34,19 @@ const currentPath = Astro.url.pathname.replace(/\/+$/, '') || '/';
     <meta name="twitter:card" content="summary_large_image" />
   </head>
 
-  <body class="min-h-screen bg-ink text-bone antialiased">
+  <body class="bg-ink text-bone min-h-screen antialiased">
     <a
       href="#main"
-      class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:rounded focus:bg-accent focus:px-4 focus:py-2 focus:text-ink"
+      class="focus:bg-accent focus:text-ink sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:rounded focus:px-4 focus:py-2"
     >
       Saltar al contenido
     </a>
 
     <header class="border-b border-white/10">
-      <nav class="mx-auto flex max-w-6xl items-center justify-between px-6 py-5" aria-label="Principal">
+      <nav
+        class="mx-auto flex max-w-6xl items-center justify-between px-6 py-5"
+        aria-label="Principal"
+      >
         <a href={import.meta.env.BASE_URL} class="font-display text-xl tracking-tight">
           {siteConfig.name}
         </a>
@@ -51,7 +56,7 @@ const currentPath = Astro.url.pathname.replace(/\/+$/, '') || '/';
               <li>
                 <a
                   href={item.href}
-                  class="transition-colors hover:text-accent"
+                  class="hover:text-accent transition-colors"
                   aria-current={currentPath === item.href ? 'page' : undefined}
                 >
                   {item.label}
@@ -68,7 +73,9 @@ const currentPath = Astro.url.pathname.replace(/\/+$/, '') || '/';
     </main>
 
     <footer class="mt-24 border-t border-white/10">
-      <div class="mx-auto flex max-w-6xl flex-col gap-2 px-6 py-10 text-sm text-bone/60 md:flex-row md:justify-between">
+      <div
+        class="text-bone/60 mx-auto flex max-w-6xl flex-col gap-2 px-6 py-10 text-sm md:flex-row md:justify-between"
+      >
         <p>© {new Date().getFullYear()} {siteConfig.legalName}</p>
         <ul class="flex gap-6">
           <li><a href="/aviso-legal" class="hover:text-accent">Aviso legal</a></li>
