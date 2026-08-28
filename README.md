@@ -2,6 +2,8 @@
 
 Sitio web corporativo de **n28**, estudio de videobooks y grabaciones para actores.
 
+El sitio está publicado en <https://jaimerperez.github.io/n28/>.
+
 Sitio estático construido con Astro y desplegado en GitHub Pages mediante una cadena
 completa de CI/CD. El repositorio se usa también como banco de pruebas de prácticas
 DevOps: cada fase del proyecto introduce una herramienta o práctica nueva.
@@ -54,8 +56,8 @@ de despliegue de GitHub Pages:
 ## Hoja de ruta DevOps
 
 - [x] **Fase 0** — Base del repositorio: Git, `.nvmrc`, EditorConfig, Conventional Commits
-- [ ] **Fase 1** — Calidad local: ESLint, Stylelint, Prettier, hooks de pre-commit
-- [ ] **Fase 2** — CI en GitHub Actions: build, caché, artefactos, checks obligatorios
+- [x] **Fase 1** — Calidad local: ESLint, Stylelint, Prettier, hooks de pre-commit
+- [x] **Fase 2** — CI en GitHub Actions: build, caché, artefactos, checks obligatorios
 - [ ] **Fase 3** — Tests: Playwright E2E, axe (accesibilidad), Lighthouse CI con presupuestos
 - [ ] **Fase 4** — Contenedores: Dockerfile multi-stage sobre nginx, publicación en GHCR
 - [ ] **Fase 5** — Seguridad: Dependabot, CodeQL, Trivy, gitleaks, SBOM, cabeceras CSP
