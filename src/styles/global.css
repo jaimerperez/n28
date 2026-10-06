@@ -1,10 +1,16 @@
 @import 'tailwindcss';
 
+/* Paleta y tipografías sacadas del diseño de Canva (N28-Project-WEB). */
 @theme {
-  --color-ink: #0b0b0d;
+  --color-ink: #111;
   --color-bone: #f5f3ef;
-  --color-accent: #c8a24a;
-  --font-display: 'Georgia', 'Times New Roman', serif;
+  --color-red: #e2322b;
+  --color-violet: #4d4df2;
+  --color-blue: #1212e0;
+  --color-accent: var(--color-red);
+  --font-display: 'Anton', 'Impact', sans-serif;
+  --font-mono: 'Space Mono', ui-monospace, monospace;
+  --font-nav: 'Barlow Condensed', 'Arial Narrow', sans-serif;
 }
 
 :root {
@@ -15,8 +21,27 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Cinta infinita "N28°PROJECT": el contenido va duplicado y se desplaza la mitad. */
+.marquee {
+  animation: marquee 40s linear infinite;
+}
+
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+
+  .marquee {
+    animation: none;
   }
 }

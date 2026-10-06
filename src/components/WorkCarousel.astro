@@ -1,0 +1,107 @@
+---
+import { Image } from 'astro:assets';
+import { works, embedUrl } from '../content/works';
+import { ui, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = ui[lang].work;
+---
+
+<div class="relative" data-carousel>
+  <ul
+    class="no-scrollbar flex snap-x snap-mandatory gap-6 overflow-x-auto scroll-smooth px-[12vw] md:px-[20vw]"
+    data-track
+  >
+    {
+      works.map((work) => {
+        const src = embedUrl(work.video);
+        return (
+          <li class="w-[76vw] shrink-0 snap-center md:w-[60vw]" data-slide>
+            <div
+              class="from-violet to-ink relative aspect-video overflow-hidden rounded-2xl bg-linear-to-br"
+              data-player={src ?? undefined}
+              data-title={work.title}
+            >
+              {work.poster && (
+                <Image
+                  src={work.poster}
+                  alt=""
+                  widths={[480, 738]}
+                  sizes="(min-width: 768px) 60vw, 76vw"
+                  class="absolute inset-0 h-full w-full object-cover"
+                />
+              )}
+              {src ? (
+                <button
+                  type="button"
+                  class="group absolute inset-0 grid place-items-center"
+                  aria-label={`${t.play}: ${work.title}`}
+                  data-play
+                >
+                  <span class="border-bone/90 bg-ink/30 grid size-16 place-items-center rounded-full border-2 backdrop-blur-sm transition-transform group-hover:scale-110 md:size-20">
+                    <svg viewBox="0 0 24 24" class="fill-bone ml-1 size-7" aria-hidden="true">
+                      <path d="M6 4l14 8-14 8z" />
+                    </svg>
+                  </span>
+                </button>
+              ) : (
+                <span class="bg-ink/70 font-nav absolute bottom-4 left-4 rounded-full px-3 py-1 text-sm uppercase">
+                  {t.soon}
+                </span>
+              )}
+            </div>
+            <h3 class="font-display mt-4 text-3xl uppercase md:text-5xl">{work.title}</h3>
+            <p class="font-mono text-xs uppercase opacity-70">{work.category[lang]}</p>
+          </li>
+        );
+      })
+    }
+  </ul>
+
+  <button
+    type="button"
+    class="bg-red text-ink absolute top-[calc(50%-3rem)] left-2 grid size-11 place-items-center rounded-full text-xl font-bold md:left-8 md:size-14"
+    aria-label={t.prev}
+    data-step="-1">«</button
+  >
+  <button
+    type="button"
+    class="bg-red text-ink absolute top-[calc(50%-3rem)] right-2 grid size-11 place-items-center rounded-full text-xl font-bold md:right-8 md:size-14"
+    aria-label={t.next}
+    data-step="1">»</button
+  >
+</div>
+
+<script>
+  for (const root of document.querySelectorAll<HTMLElement>('[data-carousel]')) {
+    const track = root.querySelector<HTMLElement>('[data-track]');
+    if (!track) continue;
+
+    for (const button of root.querySelectorAll<HTMLButtonElement>('[data-step]')) {
+      button.addEventListener('click', () => {
+        const slide = track.querySelector<HTMLElement>('[data-slide]');
+        if (!slide) return;
+        const gap = parseFloat(getComputedStyle(track).columnGap) || 0;
+        track.scrollBy({ left: Number(button.dataset.step) * (slide.offsetWidth + gap) });
+      });
+    }
+  }
+
+  // Fachada: el iframe del reproductor solo se crea al pulsar "reproducir".
+  for (const button of document.querySelectorAll<HTMLButtonElement>('[data-play]')) {
+    button.addEventListener('click', () => {
+      const player = button.closest<HTMLElement>('[data-player]');
+      if (!player?.dataset.player) return;
+      const iframe = document.createElement('iframe');
+      iframe.src = player.dataset.player;
+      iframe.title = player.dataset.title ?? '';
+      iframe.allow = 'autoplay; fullscreen; picture-in-picture';
+      iframe.allowFullscreen = true;
+      iframe.className = 'absolute inset-0 h-full w-full';
+      player.replaceChildren(iframe);
+    });
+  }
+</script>
