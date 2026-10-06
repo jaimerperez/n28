@@ -21,7 +21,7 @@ const t = ui[lang].work;
         return (
           <li class="w-[76vw] shrink-0 snap-center md:w-[60vw]" data-slide>
             <div
-              class="from-violet to-ink relative aspect-video overflow-hidden rounded-2xl bg-linear-to-br"
+              class="bg-ink relative aspect-video overflow-hidden rounded-2xl"
               data-player={src ?? undefined}
               data-title={work.title}
             >
@@ -29,9 +29,12 @@ const t = ui[lang].work;
                 <Image
                   src={work.poster}
                   alt=""
-                  widths={[480, 738]}
+                  widths={[480, 800, 1280]}
                   sizes="(min-width: 768px) 60vw, 76vw"
-                  class="absolute inset-0 h-full w-full object-cover"
+                  class:list={[
+                    'absolute inset-0 h-full w-full',
+                    work.posterFit === 'contain' ? 'object-contain' : 'object-cover',
+                  ]}
                 />
               )}
               {src ? (
