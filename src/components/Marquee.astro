@@ -1,0 +1,19 @@
+---
+const items = Array.from({ length: 8 });
+---
+
+<div class="bg-red border-ink overflow-hidden border-y-2 py-2" aria-hidden="true">
+  <div class="marquee flex w-max">
+    {
+      [0, 1].map(() => (
+        <div class="flex shrink-0">
+          {items.map(() => (
+            <span class="font-display text-bone px-6 text-3xl tracking-tight uppercase md:text-5xl">
+              N28<sup class="text-[0.5em]">°</sup>Project
+            </span>
+          ))}
+        </div>
+      ))
+    }
+  </div>
+</div>

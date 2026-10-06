@@ -1,0 +1,40 @@
+---
+/**
+ * Borde de papel rasgado entre secciones. Se pinta con `currentColor` (el color de
+ * la sección siguiente) y se coloca pegado al final de la sección actual.
+ * El dibujo es pseudoaleatorio pero estable: misma `seed`, mismo borde en cada build.
+ */
+interface Props {
+  seed?: number;
+  class?: string;
+}
+const { seed = 1, class: className } = Astro.props;
+
+let state = seed;
+const rand = () => {
+  state = (state * 16807) % 2147483647;
+  return (state - 1) / 2147483646;
+};
+
+// Una línea base que deriva despacio (la forma del rasgado) más un temblor fino
+// (las fibras del papel) y algún trozo suelto que sobresale.
+const points: string[] = [];
+let base = 45;
+let drift = 0;
+for (let x = 0; x <= 1000; x += 2 + rand() * 5) {
+  drift = Math.max(-1.5, Math.min(1.5, drift + (rand() - 0.5) * 0.8));
+  base = Math.max(15, Math.min(75, base + drift));
+  const chip = rand() < 0.04 ? 4 + rand() * 10 : 0;
+  points.push(`${x.toFixed(1)},${(base + rand() * 5 - chip).toFixed(1)}`);
+}
+const d = `M0,100 L${points.join(' L')} L1000,${base.toFixed(1)} L1000,100 Z`;
+---
+
+<svg
+  viewBox="0 0 1000 100"
+  preserveAspectRatio="none"
+  aria-hidden="true"
+  class:list={['pointer-events-none block w-full', className]}
+>
+  <path d={d} fill="currentColor"></path>
+</svg>

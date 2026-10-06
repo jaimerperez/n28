@@ -1,0 +1,42 @@
+---
+import { sections, ui, type Lang, type Section } from '../i18n/ui';
+
+/**
+ * Menú de secciones que se repite al principio de cada bloque, como en el diseño:
+ * el "+" marca la sección en la que estás. Solo el primero es navegación real;
+ * las repeticiones se ocultan a lectores de pantalla y al tabulador.
+ */
+interface Props {
+  lang: Lang;
+  active: Section;
+  repeat?: boolean;
+  class?: string;
+}
+const { lang, active, repeat = false, class: className } = Astro.props;
+const t = ui[lang];
+const Tag = repeat ? 'div' : 'nav';
+---
+
+<Tag
+  class:list={['font-nav text-sm leading-snug uppercase md:text-base', className]}
+  aria-label={repeat ? undefined : t.navLabel}
+  aria-hidden={repeat ? 'true' : undefined}
+>
+  <ul>
+    {
+      sections.map((id) => (
+        <li>
+          <a
+            href={`#${id}`}
+            tabindex={repeat ? -1 : undefined}
+            aria-current={!repeat && id === active ? 'location' : undefined}
+            class:list={['transition-opacity hover:opacity-60', id === active && 'font-bold']}
+          >
+            <span class="inline-block w-3">{id === active ? '+' : ''}</span>
+            {t.nav[id]}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</Tag>

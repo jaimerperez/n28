@@ -1,23 +1,5 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import { siteConfig } from '../config/site';
-import { url } from '../lib/url';
+import Home from '../components/Home.astro';
 ---
 
-<Layout>
-  <section class="mx-auto max-w-6xl px-6 py-24 md:py-32">
-    <p class="text-accent mb-4 text-sm tracking-[0.2em] uppercase">{siteConfig.city}</p>
-    <h1 class="font-display text-4xl leading-tight md:text-6xl">
-      {siteConfig.tagline}
-    </h1>
-    <p class="text-bone/70 mt-6 max-w-2xl text-lg">
-      {siteConfig.description}
-    </p>
-    <a
-      href={url('/contacto')}
-      class="bg-accent text-ink mt-10 inline-block rounded px-6 py-3 font-medium transition-opacity hover:opacity-90"
-    >
-      Reservar sesión
-    </a>
-  </section>
-</Layout>
+<Home lang="es" />

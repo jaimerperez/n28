@@ -1,23 +1,35 @@
 ---
+import '@fontsource/anton';
+import '@fontsource/space-mono/400.css';
+import '@fontsource/space-mono/700.css';
+import '@fontsource/barlow-condensed/500.css';
+import '@fontsource/barlow-condensed/700.css';
 import '../styles/global.css';
-import { siteConfig, nav } from '../config/site';
-import { url, isCurrent } from '../lib/url';
+import Logo from '../components/Logo.astro';
+import { siteConfig } from '../config/site';
+import { homePath, languages, sections, ui, type Lang } from '../i18n/ui';
+import { url } from '../lib/url';
 
 interface Props {
   title?: string;
   description?: string;
+  lang?: Lang;
+  /** La home pinta su propia cabecera y pie dentro de las secciones del diseño. */
+  home?: boolean;
 }
 
-const { title, description = siteConfig.description } = Astro.props;
+const { title, lang = 'es', home = false } = Astro.props;
+const t = ui[lang];
+const description = Astro.props.description ?? t.description;
 const pageTitle = title
   ? `${title} · ${siteConfig.name}`
   : `${siteConfig.name} — ${siteConfig.tagline}`;
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
-const pathname = Astro.url.pathname;
+const langs = Object.keys(languages) as Lang[];
 ---
 
 <!doctype html>
-<html lang="es">
+<html lang={t.htmlLang}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -26,64 +38,80 @@ const pathname = Astro.url.pathname;
     <title>{pageTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
+    {
+      home &&
+        langs.map((code) => (
+          <link rel="alternate" hreflang={code} href={new URL(homePath(code), Astro.site).href} />
+        ))
+    }
 
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={siteConfig.name} />
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
-    <meta property="og:locale" content="es_ES" />
+    <meta property="og:locale" content={t.ogLocale} />
     <meta name="twitter:card" content="summary_large_image" />
   </head>
 
-  <body class="bg-ink text-bone flex min-h-screen flex-col antialiased">
+  <body class="bg-ink text-bone flex min-h-screen flex-col overflow-x-hidden antialiased">
     <a
       href="#main"
       class="focus:bg-accent focus:text-ink sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:rounded focus:px-4 focus:py-2"
     >
-      Saltar al contenido
+      {t.skip}
     </a>
 
-    <header class="border-b border-white/10">
-      <nav
-        class="mx-auto flex max-w-6xl items-center justify-between px-6 py-5"
-        aria-label="Principal"
-      >
-        <a href={url('/')} class="font-display text-xl tracking-tight">
-          {siteConfig.name}
-        </a>
-        <ul class="hidden gap-8 text-sm md:flex">
-          {
-            nav.map((item) => (
-              <li>
-                <a
-                  href={url(item.href)}
-                  class="hover:text-accent transition-colors"
-                  aria-current={isCurrent(pathname, item.href) ? 'page' : undefined}
-                >
-                  {item.label}
-                </a>
-              </li>
-            ))
-          }
-        </ul>
-      </nav>
-    </header>
+    {
+      !home && (
+        <header class="border-b border-white/10">
+          <nav
+            class="mx-auto flex max-w-6xl items-center justify-between px-6 py-5"
+            aria-label="Principal"
+          >
+            <a href={homePath(lang)} aria-label={siteConfig.name}>
+              <Logo class="text-4xl" />
+            </a>
+            <ul class="font-nav hidden gap-8 uppercase md:flex">
+              {sections.map((id) => (
+                <li>
+                  <a href={`${homePath(lang)}#${id}`} class="hover:text-accent transition-colors">
+                    {t.nav[id]}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </header>
+      )
+    }
 
     <main id="main" class="flex-1">
       <slot />
     </main>
 
-    <footer class="mt-24 border-t border-white/10">
-      <div
-        class="text-bone/60 mx-auto flex max-w-6xl flex-col gap-2 px-6 py-10 text-sm md:flex-row md:justify-between"
-      >
-        <p>© {new Date().getFullYear()} {siteConfig.legalName}</p>
-        <ul class="flex gap-6">
-          <li><a href={url('/aviso-legal')} class="hover:text-accent">Aviso legal</a></li>
-          <li><a href={url('/privacidad')} class="hover:text-accent">Privacidad</a></li>
-        </ul>
-      </div>
-    </footer>
+    {
+      !home && (
+        <footer class="mt-24 border-t border-white/10">
+          <div class="text-bone/60 mx-auto flex max-w-6xl flex-col gap-2 px-6 py-10 text-sm md:flex-row md:justify-between">
+            <p>
+              © {new Date().getFullYear()} {siteConfig.legalName}
+            </p>
+            <ul class="flex gap-6">
+              <li>
+                <a href={url('/aviso-legal')} class="hover:text-accent">
+                  {t.legal.notice}
+                </a>
+              </li>
+              <li>
+                <a href={url('/privacidad')} class="hover:text-accent">
+                  {t.legal.privacy}
+                </a>
+              </li>
+            </ul>
+          </div>
+        </footer>
+      )
+    }
   </body>
 </html>

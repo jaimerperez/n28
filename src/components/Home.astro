@@ -1,0 +1,329 @@
+---
+import { Image } from 'astro:assets';
+import Layout from '../layouts/Layout.astro';
+import Logo from './Logo.astro';
+import Marquee from './Marquee.astro';
+import SectionNav from './SectionNav.astro';
+import TornEdge from './TornEdge.astro';
+import WorkCarousel from './WorkCarousel.astro';
+import { siteConfig } from '../config/site';
+import { homePath, languages, ui, type Lang } from '../i18n/ui';
+import { url } from '../lib/url';
+import hero from '../assets/hero.jpg';
+import estudio from '../assets/estudio.jpg';
+import tv from '../assets/tv.jpg';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = ui[lang];
+const langs = Object.keys(languages) as Lang[];
+
+// Sin backend: Web3Forms reenvía el formulario por email.
+// La clave se inyecta en build desde el secreto WEB3FORMS_KEY del repositorio.
+const formKey = siteConfig.contactFormKey;
+const field =
+  'border-bone/60 focus:border-bone w-full border-0 border-b-2 bg-transparent px-0 py-2 font-mono outline-none';
+---
+
+<Layout lang={lang} home>
+  <!-- Inicio -->
+  <section id="inicio" class="relative overflow-hidden">
+    <div class="absolute inset-0 md:right-[16%] md:left-[14%]">
+      <Image
+        src={hero}
+        alt=""
+        widths={[480, 830]}
+        sizes="(min-width: 768px) 70vw, 100vw"
+        loading="eager"
+        fetchpriority="high"
+        class="h-full w-full object-cover object-[50%_30%]"
+      />
+      <div
+        class="from-ink absolute inset-0 hidden bg-linear-to-r via-transparent to-transparent md:block"
+      >
+      </div>
+      <div
+        class="from-ink absolute inset-0 hidden bg-linear-to-l via-transparent to-transparent md:block"
+      >
+      </div>
+      <div class="from-ink/80 absolute inset-0 bg-linear-to-t via-transparent to-transparent"></div>
+    </div>
+
+    <div
+      class="relative flex min-h-svh flex-col justify-between gap-10 px-5 pt-6 pb-12 md:px-10 md:pt-10"
+    >
+      <div class="flex items-start justify-between">
+        <SectionNav lang={lang} active="inicio" />
+        <div class="flex items-start gap-5">
+          <ul class="font-nav flex gap-2 pt-1 text-sm uppercase">
+            {
+              langs.map((code) => (
+                <li>
+                  <a
+                    href={homePath(code)}
+                    hreflang={code}
+                    aria-current={code === lang ? 'true' : undefined}
+                    class:list={[code === lang ? 'font-bold' : 'opacity-60 hover:opacity-100']}
+                  >
+                    {languages[code]}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+          <Logo class="text-5xl md:text-7xl" />
+        </div>
+      </div>
+
+      <h1
+        class="font-display text-red text-[clamp(5.5rem,19vw,17rem)] leading-[0.82] uppercase md:ml-[10%]"
+      >
+        <span class="block">{t.hero.title[0]}</span>
+        <span class="block">{t.hero.title[1]}</span>
+      </h1>
+
+      <div class="self-end text-right">
+        <p class="ml-auto max-w-[18ch] font-mono text-lg leading-snug md:text-2xl">
+          {t.hero.tagline}
+        </p>
+        <a
+          href="#contacto"
+          class="border-bone font-nav hover:bg-bone hover:text-ink mt-5 inline-block rounded-full border-2 px-7 py-2.5 text-sm font-bold uppercase transition-colors"
+        >
+          {t.hero.cta}
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <Marquee />
+
+  <!-- Sobre nosotros -->
+  <section id="nosotros" class="bg-violet text-ink relative px-5 pt-8 pb-36 md:px-10 md:pb-52">
+    <SectionNav lang={lang} active="nosotros" repeat />
+
+    <p
+      class="mt-16 font-mono text-[clamp(1.2rem,2.6vw,2.6rem)] leading-snug tracking-wide uppercase md:mt-24 md:text-justify"
+    >
+      {t.about.statement}
+    </p>
+
+    <div class="mt-20 grid gap-10 md:mt-28 md:grid-cols-[2fr_3fr]">
+      <h2 class="font-display text-[clamp(3rem,7vw,6.5rem)] leading-[0.9] uppercase">
+        {t.about.heading}
+      </h2>
+      <div>
+        <p class="font-nav text-lg font-medium uppercase md:text-2xl">
+          {t.about.story.map((line) => <span class="block">{line}</span>)}
+        </p>
+        <ul class="border-ink/60 mt-12 border-t font-mono text-sm">
+          {
+            siteConfig.team.map((name) => (
+              <li class="border-ink/60 flex justify-between gap-4 border-b py-3">
+                <span>{name}</span>
+                <span class="text-right">{t.about.role} +</span>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+
+    <TornEdge seed={7} class="text-ink absolute inset-x-0 bottom-0 h-16 md:h-28" />
+  </section>
+
+  <!-- Proyectos -->
+  <section id="proyectos" class="text-bone relative overflow-hidden pt-8 pb-20">
+    <div class="flex justify-between gap-6 px-5 md:px-10">
+      <SectionNav lang={lang} active="proyectos" repeat class="text-red" />
+      <ul class="font-nav text-red text-right text-xs uppercase md:text-sm">
+        {t.work.categories.map((category) => <li>{category}</li>)}
+      </ul>
+    </div>
+
+    <h2
+      class="font-display text-red mt-8 text-center text-[clamp(4.5rem,17vw,16rem)] leading-[0.85] uppercase"
+    >
+      {t.work.title}
+    </h2>
+    <p
+      class="font-nav mt-6 ml-auto max-w-sm px-5 text-right text-lg font-bold uppercase md:px-10 md:text-xl"
+    >
+      {t.work.intro}
+    </p>
+
+    <div class="mt-14">
+      <WorkCarousel lang={lang} />
+    </div>
+  </section>
+
+  <Marquee />
+
+  <!-- Servicios -->
+  <section id="servicios" class="bg-red text-ink relative px-5 pt-8 pb-40 md:px-10 md:pb-56">
+    <SectionNav lang={lang} active="servicios" repeat />
+
+    <h2 class="sr-only">{t.services.full}</h2>
+    <div class="mt-12 grid items-center gap-x-10 gap-y-6 md:grid-cols-2">
+      <p
+        class="font-display order-1 text-[clamp(6rem,21vw,19rem)] leading-[0.82] uppercase"
+        aria-hidden="true"
+      >
+        {t.services.title[0]}
+      </p>
+      <Image
+        src={estudio}
+        alt=""
+        widths={[435]}
+        class="order-3 aspect-square w-full max-w-md rounded-2xl object-cover md:order-2 md:justify-self-end"
+      />
+      <ul
+        class="order-4 space-y-1 font-mono text-base uppercase md:order-3 md:self-start md:text-xl"
+      >
+        {
+          t.services.list.map((service, i) => (
+            <li class:list={[i === 0 ? 'mb-2 text-lg md:text-2xl' : 'pl-8 md:pl-14']}>{service}</li>
+          ))
+        }
+      </ul>
+      <p
+        class="font-display order-2 text-[clamp(6rem,21vw,19rem)] leading-[0.82] uppercase md:order-4 md:justify-self-end"
+        aria-hidden="true"
+      >
+        {t.services.title[1]}
+      </p>
+    </div>
+
+    <a
+      href={url('/precios')}
+      class="border-ink font-nav hover:bg-ink hover:text-red mt-12 inline-block rounded-full border-2 px-7 py-2.5 font-bold uppercase transition-colors"
+    >
+      {t.services.prices} →
+    </a>
+
+    <TornEdge seed={21} class="text-ink absolute inset-x-0 bottom-0 h-20 md:h-32" />
+  </section>
+
+  <!-- Contacto -->
+  <section id="contacto" class="text-bone relative pt-8">
+    <div class="px-5 md:px-10">
+      <SectionNav lang={lang} active="contacto" repeat />
+    </div>
+
+    <h2
+      class="font-display px-4 pt-16 text-center text-[clamp(3.2rem,10vw,9rem)] leading-[0.9] uppercase md:pt-24"
+    >
+      {t.contact.title}
+    </h2>
+
+    <div
+      class="mx-auto grid max-w-6xl items-center gap-10 px-5 py-16 md:grid-cols-[2fr_3fr] md:px-10 md:py-24"
+    >
+      <Image src={tv} alt="" widths={[492]} class="mx-auto w-full max-w-sm" />
+      <dl class="grid gap-10 font-mono sm:grid-cols-2">
+        <div class="sm:col-span-2">
+          <dt class="text-sm uppercase">{t.contact.emailLabel}:</dt>
+          <dd class="font-nav mt-1 text-3xl font-bold uppercase md:text-5xl">
+            <a href={`mailto:${siteConfig.email}`} class="hover:text-red break-all">
+              {siteConfig.email}
+            </a>
+          </dd>
+        </div>
+        <div>
+          <dt class="font-nav text-3xl font-bold uppercase">{siteConfig.city}</dt>
+          <dd class="text-sm uppercase">{t.contact.cityNote}</dd>
+        </div>
+        <div>
+          <dt class="font-nav text-3xl font-bold uppercase">{t.contact.follow}</dt>
+          <dd class="text-sm">
+            <a href={siteConfig.social.instagram.href} rel="noopener" class="hover:text-red">
+              Instagram {siteConfig.social.instagram.label}
+            </a>
+          </dd>
+        </div>
+      </dl>
+    </div>
+
+    <TornEdge seed={42} class="text-blue h-16 md:h-28" />
+
+    <div class="bg-blue px-5 pb-10 md:px-10">
+      <form
+        action="https://api.web3forms.com/submit"
+        method="POST"
+        class="mx-auto max-w-3xl space-y-8 pt-8"
+      >
+        <h3 class="font-display text-4xl uppercase md:text-6xl">{t.contact.formTitle}</h3>
+        <input type="hidden" name="access_key" value={formKey} />
+        <input type="hidden" name="subject" value="Nueva solicitud desde la web de N28 Project" />
+        <input type="hidden" name="redirect" value={new URL(url('/gracias'), Astro.site).href} />
+        <!-- Trampa antispam: los bots la rellenan, las personas no la ven -->
+        <input type="checkbox" name="botcheck" class="hidden" style="display:none" tabindex="-1" />
+
+        <div class="grid gap-8 md:grid-cols-2">
+          <div>
+            <label for="nombre" class="font-nav block text-sm uppercase">{t.contact.name}</label>
+            <input
+              id="nombre"
+              name="nombre"
+              type="text"
+              required
+              autocomplete="name"
+              class={field}
+            />
+          </div>
+          <div>
+            <label for="email" class="font-nav block text-sm uppercase">{t.contact.email}</label>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              required
+              autocomplete="email"
+              class={field}
+            />
+          </div>
+        </div>
+
+        <div>
+          <label for="mensaje" class="font-nav block text-sm uppercase">{t.contact.message}</label>
+          <textarea id="mensaje" name="mensaje" rows="4" required class={field}></textarea>
+        </div>
+
+        <div class="flex gap-3">
+          <input
+            id="privacidad"
+            name="privacidad"
+            type="checkbox"
+            required
+            class="accent-bone mt-1"
+          />
+          <label for="privacidad" class="text-sm">
+            {t.contact.privacyPrefix}{' '}
+            <a href={url('/privacidad')} class="underline underline-offset-2">
+              {t.contact.privacyLink}
+            </a>.
+          </label>
+        </div>
+
+        <button
+          type="submit"
+          class="bg-bone text-blue font-nav rounded-full px-8 py-3 font-bold uppercase transition-opacity hover:opacity-90"
+        >
+          {t.contact.submit}
+        </button>
+      </form>
+
+      <footer
+        class="border-bone/30 mt-20 flex flex-col gap-3 border-t pt-6 text-sm md:flex-row md:items-center md:justify-between"
+      >
+        <p>© {new Date().getFullYear()} {siteConfig.legalName}</p>
+        <ul class="flex gap-6">
+          <li><a href={url('/aviso-legal')} class="hover:underline">{t.legal.notice}</a></li>
+          <li><a href={url('/privacidad')} class="hover:underline">{t.legal.privacy}</a></li>
+        </ul>
+      </footer>
+    </div>
+  </section>
+</Layout>
