@@ -8,18 +8,32 @@ interface Props {
 }
 const { lang } = Astro.props;
 const t = ui[lang].work;
+
+// Carrusel circular: los trabajos se pintan tres veces y se navega siempre por la copia
+// central. Al acercarse a un extremo el script salta, sin animación, a la posición
+// equivalente del centro, así nunca hay huecos a los lados. Las copias son `inert`.
+const COPIES = 3;
+const slides = Array.from({ length: COPIES }, (_, copy) =>
+  works.map((work) => ({ work, clone: copy !== 1 })),
+).flat();
 ---
 
 <div class="relative" data-carousel>
   <ul
-    class="no-scrollbar flex snap-x snap-mandatory gap-6 overflow-x-auto scroll-smooth px-[12vw] md:px-[20vw]"
+    class="no-scrollbar relative flex snap-x snap-mandatory gap-6 overflow-x-auto scroll-smooth"
     data-track
+    data-copies={COPIES}
   >
     {
-      works.map((work) => {
+      slides.map(({ work, clone }) => {
         const src = embedUrl(work.video);
         return (
-          <li class="w-[76vw] shrink-0 snap-center md:w-[60vw]" data-slide>
+          <li
+            class="w-[76vw] shrink-0 snap-center md:w-[60vw]"
+            data-slide
+            inert={clone}
+            aria-hidden={clone ? 'true' : undefined}
+          >
             <div
               class="bg-ink relative aspect-video overflow-hidden rounded-2xl"
               data-player={src ?? undefined}
@@ -82,13 +96,64 @@ const t = ui[lang].work;
   for (const root of document.querySelectorAll<HTMLElement>('[data-carousel]')) {
     const track = root.querySelector<HTMLElement>('[data-track]');
     if (!track) continue;
+    const slides = [...track.querySelectorAll<HTMLElement>('[data-slide]')];
+    const count = slides.length / Number(track.dataset.copies);
+
+    // Posición de scroll que deja centrada la diapositiva `i`.
+    const centerOf = (i: number) =>
+      slides[i].offsetLeft + slides[i].offsetWidth / 2 - track.clientWidth / 2;
+
+    const nearest = () => {
+      const middle = track.scrollLeft + track.clientWidth / 2;
+      let best = 0;
+      slides.forEach((slide, i) => {
+        const distance = Math.abs(slide.offsetLeft + slide.offsetWidth / 2 - middle);
+        const bestDistance = Math.abs(
+          slides[best].offsetLeft + slides[best].offsetWidth / 2 - middle,
+        );
+        if (distance < bestDistance) best = i;
+      });
+      return best;
+    };
+
+    const jumpTo = (left: number) => {
+      track.style.scrollBehavior = 'auto';
+      track.scrollLeft = left;
+      track.style.scrollBehavior = '';
+    };
+
+    // Si la diapositiva centrada es una copia, salta a su original de la copia central.
+    const recenter = () => {
+      const i = nearest();
+      const original = count + (i % count);
+      if (i !== original) jumpTo(centerOf(original) + (track.scrollLeft - centerOf(i)));
+    };
+
+    jumpTo(centerOf(count));
+
+    if ('onscrollend' in window) {
+      track.addEventListener('scrollend', recenter);
+    } else {
+      let timer: number | undefined;
+      track.addEventListener('scroll', () => {
+        clearTimeout(timer);
+        timer = window.setTimeout(recenter, 150);
+      });
+    }
+
+    let lastWidth = window.innerWidth;
+    window.addEventListener('resize', () => {
+      if (window.innerWidth === lastWidth) return;
+      lastWidth = window.innerWidth;
+      jumpTo(centerOf(count + (nearest() % count)));
+    });
 
     for (const button of root.querySelectorAll<HTMLButtonElement>('[data-step]')) {
       button.addEventListener('click', () => {
-        const slide = track.querySelector<HTMLElement>('[data-slide]');
-        if (!slide) return;
-        const gap = parseFloat(getComputedStyle(track).columnGap) || 0;
-        track.scrollBy({ left: Number(button.dataset.step) * (slide.offsetWidth + gap) });
+        // Recentrar antes de moverse: aunque `scrollend` no llegue, nunca se alcanza un extremo.
+        recenter();
+        const target = nearest() + Number(button.dataset.step);
+        track.scrollTo({ left: centerOf(target) });
       });
     }
   }
