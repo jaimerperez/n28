@@ -24,6 +24,30 @@ const field =
   'border-bone/60 focus:border-bone w-full border-0 border-b-2 bg-transparent px-0 py-2 font-mono outline-none';
 ---
 
+<script>
+  // El vídeo de portada no se carga si el visitante pide menos movimiento o ahorro de datos:
+  // en ese caso se queda la foto fija.
+  const holder = document.querySelector<HTMLElement>('[data-hero-video]');
+  const saveData = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection
+    ?.saveData;
+  if (
+    holder?.dataset.heroVideo &&
+    !saveData &&
+    !matchMedia('(prefers-reduced-motion: reduce)').matches
+  ) {
+    const iframe = document.createElement('iframe');
+    iframe.src = holder.dataset.heroVideo;
+    iframe.title = '';
+    iframe.tabIndex = -1;
+    iframe.allow = 'autoplay; fullscreen';
+    // Vídeo 4:3 escalado para cubrir todo el hero (equivalente a object-fit: cover).
+    iframe.className =
+      'pointer-events-none absolute top-1/2 left-1/2 h-[max(100cqh,75cqw)] w-[max(100cqw,133.34cqh)] -translate-x-1/2 -translate-y-1/2 opacity-0 transition-opacity duration-1000';
+    iframe.addEventListener('load', () => iframe.classList.remove('opacity-0'));
+    holder.append(iframe);
+  }
+</script>
+
 <Layout lang={lang} home>
   <!-- Inicio: foto a sangre, menú arriba a la izquierda y lema abajo a la derecha -->
   <section id="inicio" class="relative overflow-hidden">
@@ -36,7 +60,16 @@ const field =
       fetchpriority="high"
       class="absolute inset-0 h-full w-full object-cover object-[50%_25%]"
     />
+    <!-- Vídeo de fondo: se inyecta por script encima de la foto, que hace de póster -->
+    <div
+      class="[container-type:size] absolute inset-0 overflow-hidden"
+      data-hero-video={`https://player.vimeo.com/video/${siteConfig.heroVideoId}?background=1&dnt=1`}
+      aria-hidden="true"
+    >
+    </div>
     <div class="from-ink/70 absolute inset-0 bg-linear-to-t via-transparent to-transparent"></div>
+    <!-- Oscurece la parte de arriba para que el menú y el logo se lean sobre cualquier fotograma -->
+    <div class="from-ink/60 absolute inset-x-0 top-0 h-48 bg-linear-to-b to-transparent"></div>
 
     <div
       class="relative flex min-h-svh flex-col justify-between px-5 pt-6 pb-36 md:px-10 md:pt-10 md:pb-48"

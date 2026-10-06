@@ -14,6 +14,8 @@ export const siteConfig = {
   social: {
     instagram: { label: '@n28project', href: 'https://instagram.com/n28project' },
   },
+  /** Vídeo de Vimeo que se reproduce de fondo, en silencio y en bucle, en la portada. */
+  heroVideoId: '1182737117',
   team: ['Jorge Yumar', 'Selene Rodríguez'],
   /** Clave de acceso de Web3Forms. Se inyecta en build desde un secreto del repositorio. */
   contactFormKey: import.meta.env.PUBLIC_WEB3FORMS_KEY ?? '',
