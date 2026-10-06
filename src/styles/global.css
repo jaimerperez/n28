@@ -21,17 +21,6 @@ html {
   scroll-behavior: smooth;
 }
 
-/* Cinta infinita "N28°PROJECT": el contenido va duplicado y se desplaza la mitad. */
-.marquee {
-  animation: marquee 40s linear infinite;
-}
-
-@keyframes marquee {
-  to {
-    transform: translateX(-50%);
-  }
-}
-
 .no-scrollbar {
   scrollbar-width: none;
 }
@@ -39,9 +28,5 @@ html {
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
-  }
-
-  .marquee {
-    animation: none;
   }
 }

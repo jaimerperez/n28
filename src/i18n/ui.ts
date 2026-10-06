@@ -7,7 +7,7 @@ import { url } from '../lib/url';
 export const languages = { es: 'ES', en: 'EN' } as const;
 export type Lang = keyof typeof languages;
 
-export const sections = ['inicio', 'nosotros', 'proyectos', 'servicios', 'contacto'] as const;
+export const sections = ['inicio', 'equipo', 'trabajos', 'contacto'] as const;
 export type Section = (typeof sections)[number];
 
 export function homePath(lang: Lang): string {
@@ -23,19 +23,15 @@ const es = {
   navLabel: 'Secciones',
   nav: {
     inicio: 'Inicio',
-    nosotros: 'Sobre nosotros',
-    proyectos: 'Proyectos',
-    servicios: 'Servicios',
+    equipo: 'Equipo',
+    trabajos: 'Trabajos',
     contacto: 'Contacto',
   } satisfies Record<Section, string>,
   hero: {
-    title: ['Haz', 'ruido'],
-    tagline: 'Proyectamos lo que todavía no se ve',
-    cta: 'Crea tu proyecto',
+    tagline: 'Damos forma a lo que todavía no se ve',
+    cta: 'Empieza tu proyecto',
   },
-  about: {
-    statement:
-      'N28Project impulsa la identidad visual de artistas y marcas a través de piezas audiovisuales con narrativa, estilo y dirección cinematográfica.',
+  team: {
     heading: 'Construimos mundos visuales',
     story: [
       'N28Project nació de una idea sencilla:',
@@ -44,39 +40,28 @@ const es = {
     ],
     role: 'Dirección creativa · Cofundación',
   },
-  work: {
-    title: 'Proyectos',
-    intro:
-      'Creamos piezas audiovisuales que emocionan a través de la imagen, la atmósfera y la identidad narrativa.',
+  selected: {
+    label: 'Trabajos seleccionados',
     categories: [
-      'Videobooks',
-      'Selftapes',
-      'Imagen audiovisual',
+      'Videobooks de actor',
+      'Campañas visuales',
       'Videoclips',
-      'Piezas publicitarias',
-      'Dirección creativa audiovisual',
+      'Dirección creativa',
+      'Piezas narrativas',
     ],
+    statement:
+      'Creamos piezas audiovisuales que emocionan a través de la imagen, la atmósfera y la identidad narrativa',
+  },
+  work: {
+    title: 'Trabajos',
     play: 'Reproducir',
     soon: 'Próximamente',
-    prev: 'Proyecto anterior',
-    next: 'Proyecto siguiente',
+    prev: 'Trabajo anterior',
+    next: 'Trabajo siguiente',
   },
-  services: {
-    title: ['Servi', 'cios'],
-    full: 'Servicios',
-    list: [
-      'Videobooks',
-      'Selftapes',
-      'Imagen audiovisual',
-      'Videoclips',
-      'Piezas publicitarias',
-      'Dirección creativa audiovisual',
-    ],
-    prices: 'Ver tarifas',
-  },
+  story: 'Contemos tu historia',
   contact: {
-    title: '¿Creamos algo juntos?',
-    emailLabel: 'Escríbenos',
+    label: 'Contacto',
     cityNote: '/ trabajando internacionalmente',
     follow: 'Síguenos',
     formTitle: 'Cuéntanos tu proyecto',
@@ -87,7 +72,7 @@ const es = {
     privacyLink: 'política de privacidad',
     submit: 'Enviar',
   },
-  legal: { notice: 'Aviso legal', privacy: 'Privacidad' },
+  footer: { prices: 'Tarifas', notice: 'Aviso legal', privacy: 'Privacidad' },
 };
 
 type Dictionary = typeof es;
@@ -101,19 +86,15 @@ const en: Dictionary = {
   navLabel: 'Sections',
   nav: {
     inicio: 'Home',
-    nosotros: 'About',
-    proyectos: 'Work',
-    servicios: 'Services',
+    equipo: 'Team',
+    trabajos: 'Work',
     contacto: 'Contact',
   },
   hero: {
-    title: ['Make', 'noise'],
     tagline: 'We shape what isn’t visible yet',
     cta: 'Start your project',
   },
-  about: {
-    statement:
-      'N28Project drives the visual identity of artists and brands through audiovisual pieces with narrative, style and cinematic direction.',
+  team: {
     heading: 'We build visual worlds',
     story: [
       'N28Project was born from a simple idea:',
@@ -122,10 +103,8 @@ const en: Dictionary = {
     ],
     role: 'Creative Director & Co-Founder',
   },
-  work: {
-    title: 'Work',
-    intro:
-      'We create emotionally driven audiovisual pieces through image, atmosphere and narrative identity.',
+  selected: {
+    label: 'Selected work',
     categories: [
       'Actor reels',
       'Visual campaigns',
@@ -133,27 +112,19 @@ const en: Dictionary = {
       'Creative direction',
       'Narrative pieces',
     ],
+    statement:
+      'We create emotionally driven audiovisual pieces through image, atmosphere and narrative identity',
+  },
+  work: {
+    title: 'Work',
     play: 'Play',
     soon: 'Coming soon',
-    prev: 'Previous project',
-    next: 'Next project',
+    prev: 'Previous work',
+    next: 'Next work',
   },
-  services: {
-    title: ['Servi', 'ces'],
-    full: 'Services',
-    list: [
-      'Actor reels',
-      'Self-tapes',
-      'Audiovisual image',
-      'Music videos',
-      'Commercials',
-      'Audiovisual creative direction',
-    ],
-    prices: 'See rates',
-  },
+  story: 'Let’s tell your story',
   contact: {
-    title: 'Let’s tell your story',
-    emailLabel: 'Contact',
+    label: 'Contact',
     cityNote: '/ working internationally',
     follow: 'Follow us',
     formTitle: 'Tell us about your project',
@@ -164,7 +135,7 @@ const en: Dictionary = {
     privacyLink: 'privacy policy',
     submit: 'Send',
   },
-  legal: { notice: 'Legal notice', privacy: 'Privacy' },
+  footer: { prices: 'Rates', notice: 'Legal notice', privacy: 'Privacy' },
 };
 
 export const ui: Record<Lang, Dictionary> = { es, en };

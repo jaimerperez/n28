@@ -2,7 +2,6 @@
 import { Image } from 'astro:assets';
 import Layout from '../layouts/Layout.astro';
 import Logo from './Logo.astro';
-import Marquee from './Marquee.astro';
 import SectionNav from './SectionNav.astro';
 import TornEdge from './TornEdge.astro';
 import WorkCarousel from './WorkCarousel.astro';
@@ -10,8 +9,6 @@ import { siteConfig } from '../config/site';
 import { homePath, languages, ui, type Lang } from '../i18n/ui';
 import { url } from '../lib/url';
 import hero from '../assets/hero.jpg';
-import estudio from '../assets/estudio.jpg';
-import tv from '../assets/tv.jpg';
 
 interface Props {
   lang: Lang;
@@ -28,31 +25,21 @@ const field =
 ---
 
 <Layout lang={lang} home>
-  <!-- Inicio -->
+  <!-- Inicio: foto a sangre, menú arriba a la izquierda y lema abajo a la derecha -->
   <section id="inicio" class="relative overflow-hidden">
-    <div class="absolute inset-0 md:right-[16%] md:left-[14%]">
-      <Image
-        src={hero}
-        alt=""
-        widths={[480, 830]}
-        sizes="(min-width: 768px) 70vw, 100vw"
-        loading="eager"
-        fetchpriority="high"
-        class="h-full w-full object-cover object-[50%_30%]"
-      />
-      <div
-        class="from-ink absolute inset-0 hidden bg-linear-to-r via-transparent to-transparent md:block"
-      >
-      </div>
-      <div
-        class="from-ink absolute inset-0 hidden bg-linear-to-l via-transparent to-transparent md:block"
-      >
-      </div>
-      <div class="from-ink/80 absolute inset-0 bg-linear-to-t via-transparent to-transparent"></div>
-    </div>
+    <Image
+      src={hero}
+      alt=""
+      widths={[480, 830]}
+      sizes="100vw"
+      loading="eager"
+      fetchpriority="high"
+      class="absolute inset-0 h-full w-full object-cover object-[50%_25%]"
+    />
+    <div class="from-ink/70 absolute inset-0 bg-linear-to-t via-transparent to-transparent"></div>
 
     <div
-      class="relative flex min-h-svh flex-col justify-between gap-10 px-5 pt-6 pb-12 md:px-10 md:pt-10"
+      class="relative flex min-h-svh flex-col justify-between px-5 pt-6 pb-36 md:px-10 md:pt-10 md:pb-48"
     >
       <div class="flex items-start justify-between">
         <SectionNav lang={lang} active="inicio" />
@@ -77,17 +64,10 @@ const field =
         </div>
       </div>
 
-      <h1
-        class="font-display text-red text-[clamp(5.5rem,19vw,17rem)] leading-[0.82] uppercase md:ml-[10%]"
-      >
-        <span class="block">{t.hero.title[0]}</span>
-        <span class="block">{t.hero.title[1]}</span>
-      </h1>
-
       <div class="self-end text-right">
-        <p class="ml-auto max-w-[18ch] font-mono text-lg leading-snug md:text-2xl">
+        <h1 class="ml-auto max-w-[18ch] font-mono text-xl leading-snug md:text-3xl">
           {t.hero.tagline}
-        </p>
+        </h1>
         <a
           href="#contacto"
           class="border-bone font-nav hover:bg-bone hover:text-ink mt-5 inline-block rounded-full border-2 px-7 py-2.5 text-sm font-bold uppercase transition-colors"
@@ -96,163 +76,132 @@ const field =
         </a>
       </div>
     </div>
+
+    <TornEdge seed={3} class="text-ink absolute inset-x-0 bottom-0 h-20 md:h-32" />
   </section>
 
-  <Marquee />
-
-  <!-- Sobre nosotros -->
-  <section id="nosotros" class="bg-violet text-ink relative px-5 pt-8 pb-36 md:px-10 md:pb-52">
-    <SectionNav lang={lang} active="nosotros" repeat />
-
-    <p
-      class="mt-16 font-mono text-[clamp(1.2rem,2.6vw,2.6rem)] leading-snug tracking-wide uppercase md:mt-24 md:text-justify"
-    >
-      {t.about.statement}
-    </p>
-
-    <div class="mt-20 grid gap-10 md:mt-28 md:grid-cols-[2fr_3fr]">
-      <h2 class="font-display text-[clamp(3rem,7vw,6.5rem)] leading-[0.9] uppercase">
-        {t.about.heading}
-      </h2>
-      <div>
-        <p class="font-nav text-lg font-medium uppercase md:text-2xl">
-          {t.about.story.map((line) => <span class="block">{line}</span>)}
-        </p>
-        <ul class="border-ink/60 mt-12 border-t font-mono text-sm">
-          {
-            siteConfig.team.map((name) => (
-              <li class="border-ink/60 flex justify-between gap-4 border-b py-3">
-                <span>{name}</span>
-                <span class="text-right">{t.about.role} +</span>
-              </li>
-            ))
-          }
-        </ul>
-      </div>
-    </div>
-
-    <TornEdge seed={7} class="text-ink absolute inset-x-0 bottom-0 h-16 md:h-28" />
-  </section>
-
-  <!-- Proyectos -->
-  <section id="proyectos" class="text-bone relative overflow-hidden pt-8 pb-20">
-    <div class="flex justify-between gap-6 px-5 md:px-10">
-      <SectionNav lang={lang} active="proyectos" repeat class="text-red" />
-      <ul class="font-nav text-red text-right text-xs uppercase md:text-sm">
-        {t.work.categories.map((category) => <li>{category}</li>)}
-      </ul>
-    </div>
+  <!-- Equipo -->
+  <div class="bg-ink">
+    <TornEdge seed={11} class="text-bone h-14 md:h-24" />
+  </div>
+  <section id="equipo" class="bg-bone text-ink relative px-5 pt-8 pb-40 md:px-10 md:pb-56">
+    <SectionNav lang={lang} active="equipo" repeat />
 
     <h2
-      class="font-display text-red mt-8 text-center text-[clamp(4.5rem,17vw,16rem)] leading-[0.85] uppercase"
+      class="font-display mt-10 text-center text-[clamp(3.2rem,9vw,8.5rem)] leading-[0.9] uppercase md:mt-0"
     >
-      {t.work.title}
+      {t.team.heading}
     </h2>
     <p
-      class="font-nav mt-6 ml-auto max-w-sm px-5 text-right text-lg font-bold uppercase md:px-10 md:text-xl"
+      class="font-nav mx-auto mt-6 max-w-4xl text-lg font-medium uppercase md:text-xl [&>span:nth-child(2)]:md:text-right"
     >
-      {t.work.intro}
+      {t.team.story.map((line) => <span class="block">{line}</span>)}
     </p>
 
-    <div class="mt-14">
-      <WorkCarousel lang={lang} />
-    </div>
+    <ul class="border-ink/70 mx-auto mt-20 max-w-5xl font-mono text-sm md:mt-28">
+      {
+        siteConfig.team.map((name) => (
+          <li class="border-ink/70 flex justify-between gap-4 border-b py-3">
+            <span>{name}</span>
+            <span class="text-right">{t.team.role} +</span>
+          </li>
+        ))
+      }
+    </ul>
+
+    <TornEdge seed={19} class="text-ink absolute inset-x-0 bottom-0 h-20 md:h-32" />
   </section>
 
-  <Marquee />
-
-  <!-- Servicios -->
-  <section id="servicios" class="bg-red text-ink relative px-5 pt-8 pb-40 md:px-10 md:pb-56">
-    <SectionNav lang={lang} active="servicios" repeat />
-
-    <h2 class="sr-only">{t.services.full}</h2>
-    <div class="mt-12 grid items-center gap-x-10 gap-y-6 md:grid-cols-2">
-      <p
-        class="font-display order-1 text-[clamp(6rem,21vw,19rem)] leading-[0.82] uppercase"
-        aria-hidden="true"
-      >
-        {t.services.title[0]}
-      </p>
-      <Image
-        src={estudio}
-        alt=""
-        widths={[435]}
-        class="order-3 aspect-square w-full max-w-md rounded-2xl object-cover md:order-2 md:justify-self-end"
-      />
-      <ul
-        class="order-4 space-y-1 font-mono text-base uppercase md:order-3 md:self-start md:text-xl"
-      >
-        {
-          t.services.list.map((service, i) => (
-            <li class:list={[i === 0 ? 'mb-2 text-lg md:text-2xl' : 'pl-8 md:pl-14']}>{service}</li>
-          ))
-        }
+  <!-- Franja: trabajos seleccionados + manifiesto -->
+  <section
+    class="text-bone relative flex flex-col justify-between gap-10 px-5 pt-6 pb-36 md:flex-row md:px-10 md:pb-44"
+  >
+    <div class="font-nav text-sm uppercase">
+      <p class="font-bold">{t.selected.label}</p>
+      <ul class="italic opacity-80">
+        {t.selected.categories.map((category) => <li>{category}</li>)}
       </ul>
-      <p
-        class="font-display order-2 text-[clamp(6rem,21vw,19rem)] leading-[0.82] uppercase md:order-4 md:justify-self-end"
-        aria-hidden="true"
+    </div>
+    <p
+      class="font-nav max-w-xs self-end text-right text-xl leading-tight font-bold tracking-wide uppercase md:max-w-sm md:text-2xl"
+    >
+      {t.selected.statement}
+    </p>
+
+    <TornEdge seed={27} class="text-red absolute inset-x-0 bottom-0 h-20 md:h-32" />
+  </section>
+
+  <!-- Trabajos -->
+  <section id="trabajos" class="bg-red text-bone relative overflow-hidden pt-4 pb-40 md:pb-56">
+    <div class="relative px-5 md:px-10">
+      <SectionNav lang={lang} active="trabajos" repeat class="absolute top-6 left-5 md:left-10" />
+      <h2
+        class="font-display pt-24 text-center text-[clamp(5rem,19vw,17rem)] leading-[0.85] uppercase md:pt-0"
       >
-        {t.services.title[1]}
-      </p>
+        {t.work.title}
+      </h2>
+      <Logo class="absolute top-6 right-5 hidden text-4xl md:right-10 md:inline-flex md:text-6xl" />
     </div>
 
-    <a
-      href={url('/precios')}
-      class="border-ink font-nav hover:bg-ink hover:text-red mt-12 inline-block rounded-full border-2 px-7 py-2.5 font-bold uppercase transition-colors"
-    >
-      {t.services.prices} →
-    </a>
+    <div class="mt-8">
+      <WorkCarousel lang={lang} />
+    </div>
 
-    <TornEdge seed={21} class="text-ink absolute inset-x-0 bottom-0 h-20 md:h-32" />
+    <TornEdge seed={33} class="text-ink absolute inset-x-0 bottom-0 h-20 md:h-32" />
+  </section>
+
+  <!-- Historia -->
+  <section class="text-bone relative px-4 pt-16 pb-40 md:pt-24 md:pb-56">
+    <h2 class="font-display text-center text-[clamp(3.2rem,10vw,9.5rem)] leading-[0.9] uppercase">
+      {t.story}
+    </h2>
+    <TornEdge seed={42} class="text-blue absolute inset-x-0 bottom-0 h-24 md:h-40" />
   </section>
 
   <!-- Contacto -->
-  <section id="contacto" class="text-bone relative pt-8">
-    <div class="px-5 md:px-10">
-      <SectionNav lang={lang} active="contacto" repeat />
-    </div>
+  <section id="contacto" class="bg-blue text-bone px-5 pt-16 pb-10 md:px-10 md:pt-24">
+    <div class="mx-auto max-w-5xl">
+      <p class="font-mono text-sm uppercase md:text-base">{t.contact.label}:</p>
+      <a
+        href={`mailto:${siteConfig.email}`}
+        class="font-nav mt-1 block text-4xl font-bold break-all uppercase hover:underline md:text-7xl"
+      >
+        {siteConfig.email}
+      </a>
 
-    <h2
-      class="font-display px-4 pt-16 text-center text-[clamp(3.2rem,10vw,9rem)] leading-[0.9] uppercase md:pt-24"
-    >
-      {t.contact.title}
-    </h2>
-
-    <div
-      class="mx-auto grid max-w-6xl items-center gap-10 px-5 py-16 md:grid-cols-[2fr_3fr] md:px-10 md:py-24"
-    >
-      <Image src={tv} alt="" widths={[492]} class="mx-auto w-full max-w-sm" />
-      <dl class="grid gap-10 font-mono sm:grid-cols-2">
-        <div class="sm:col-span-2">
-          <dt class="text-sm uppercase">{t.contact.emailLabel}:</dt>
-          <dd class="font-nav mt-1 text-3xl font-bold uppercase md:text-5xl">
-            <a href={`mailto:${siteConfig.email}`} class="hover:text-red break-all">
-              {siteConfig.email}
-            </a>
-          </dd>
-        </div>
+      <div class="mt-20 flex flex-col justify-between gap-10 sm:flex-row md:mt-28">
         <div>
-          <dt class="font-nav text-3xl font-bold uppercase">{siteConfig.city}</dt>
-          <dd class="text-sm uppercase">{t.contact.cityNote}</dd>
+          <p class="font-nav text-4xl font-bold uppercase md:text-5xl">{siteConfig.city}</p>
+          <p class="ml-8 font-mono text-sm uppercase">{t.contact.cityNote}</p>
         </div>
-        <div>
-          <dt class="font-nav text-3xl font-bold uppercase">{t.contact.follow}</dt>
-          <dd class="text-sm">
-            <a href={siteConfig.social.instagram.href} rel="noopener" class="hover:text-red">
-              Instagram {siteConfig.social.instagram.label}
-            </a>
-          </dd>
+        <div class="sm:text-right">
+          <p class="font-nav text-4xl font-bold uppercase md:text-5xl">{t.contact.follow}</p>
+          <a
+            href={siteConfig.social.instagram.href}
+            rel="noopener"
+            class="inline-flex items-center gap-2 font-mono text-sm hover:underline"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              class="size-6"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              aria-hidden="true"
+            >
+              <rect x="3" y="3" width="18" height="18" rx="5"></rect>
+              <circle cx="12" cy="12" r="4"></circle>
+              <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor"></circle>
+            </svg>
+            Instagram {siteConfig.social.instagram.label}
+          </a>
         </div>
-      </dl>
-    </div>
+      </div>
 
-    <TornEdge seed={42} class="text-blue h-16 md:h-28" />
-
-    <div class="bg-blue px-5 pb-10 md:px-10">
       <form
         action="https://api.web3forms.com/submit"
         method="POST"
-        class="mx-auto max-w-3xl space-y-8 pt-8"
+        class="border-bone/30 mt-24 space-y-8 border-t pt-12"
       >
         <h3 class="font-display text-4xl uppercase md:text-6xl">{t.contact.formTitle}</h3>
         <input type="hidden" name="access_key" value={formKey} />
@@ -320,8 +269,9 @@ const field =
       >
         <p>© {new Date().getFullYear()} {siteConfig.legalName}</p>
         <ul class="flex gap-6">
-          <li><a href={url('/aviso-legal')} class="hover:underline">{t.legal.notice}</a></li>
-          <li><a href={url('/privacidad')} class="hover:underline">{t.legal.privacy}</a></li>
+          <li><a href={url('/precios')} class="hover:underline">{t.footer.prices}</a></li>
+          <li><a href={url('/aviso-legal')} class="hover:underline">{t.footer.notice}</a></li>
+          <li><a href={url('/privacidad')} class="hover:underline">{t.footer.privacy}</a></li>
         </ul>
       </footer>
     </div>
