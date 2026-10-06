@@ -1,10 +1,13 @@
 import type { ImageMetadata } from 'astro';
 import type { Lang } from '../i18n/ui';
-import diego from '../assets/diego.jpg';
+import n28project from '../assets/n28project.jpg';
+import hermanas from '../assets/hermanas.jpg';
+import laPulsion from '../assets/la-pulsion-de-la-muerte.jpg';
 
 // Los vídeos NO se versionan: GitHub Pages limita a 1 GB por repositorio.
 // Cada trabajo referencia un vídeo de Vimeo o YouTube y se incrusta solo al pulsar
 // "reproducir", así no se carga nada de terceros hasta que el visitante lo pide.
+// Las miniaturas son las de Vimeo, descargadas a src/assets/.
 
 export interface Video {
   provider: 'vimeo' | 'youtube';
@@ -17,25 +20,29 @@ export interface Work {
   category: Record<Lang, string>;
   video: Video;
   poster?: ImageMetadata;
+  /** `contain` para miniaturas que son un cartel o logo y no deben recortarse. */
+  posterFit?: 'cover' | 'contain';
 }
 
-// TODO(n28): pegar los ids reales de Vimeo/YouTube y añadir miniaturas en src/assets/.
 export const works: Work[] = [
   {
-    title: 'Diego',
-    category: { es: 'Videobook', en: 'Actor reel' },
-    video: { provider: 'vimeo', id: '' },
-    poster: diego,
+    title: 'N28Project',
+    category: { es: 'Showreel', en: 'Showreel' },
+    video: { provider: 'vimeo', id: '1182737117' },
+    poster: n28project,
+    posterFit: 'contain',
   },
   {
     title: 'Hermanas',
     category: { es: 'Pieza narrativa', en: 'Narrative piece' },
-    video: { provider: 'vimeo', id: '' },
+    video: { provider: 'vimeo', id: '1182730898' },
+    poster: hermanas,
   },
   {
-    title: 'Metro',
-    category: { es: 'Videobook', en: 'Actor reel' },
-    video: { provider: 'vimeo', id: '' },
+    title: 'La pulsión de la muerte',
+    category: { es: 'Pieza narrativa', en: 'Narrative piece' },
+    video: { provider: 'vimeo', id: '1210176229' },
+    poster: laPulsion,
   },
 ];
 
