@@ -36,10 +36,12 @@ const heroButton =
     iframe.tabIndex = -1;
     iframe.allow = 'autoplay; fullscreen; picture-in-picture';
     iframe.setAttribute('playsinline', '');
-    // Vídeo 4:3 escalado para cubrir su caja (equivalente a object-fit: cover).
+    // Vídeo 4:3 escalado para cubrir su caja (equivalente a object-fit: cover). Sin borde: el
+    // borde por defecto del iframe se veía como un marco blanco en móvil.
+    // Empieza invisible y solo se muestra cuando de verdad se está reproduciendo; si el
+    // navegador bloquea el arranque automático se sigue viendo la foto, no el póster de Vimeo.
     iframe.className =
-      'pointer-events-none absolute top-1/2 left-1/2 h-[max(100cqh,75cqw)] w-[max(100cqw,133.34cqh)] -translate-x-1/2 -translate-y-1/2 opacity-0 transition-opacity duration-1000';
-    iframe.addEventListener('load', () => iframe.classList.remove('opacity-0'));
+      'pointer-events-none absolute top-1/2 left-1/2 h-[max(100cqh,75cqw)] w-[max(100cqw,133.34cqh)] -translate-x-1/2 -translate-y-1/2 border-0 opacity-0 transition-opacity duration-1000';
     holder.append(iframe);
 
     // Controles de play/pausa y sonido. Hablan con el reproductor por la API de mensajes de
@@ -64,31 +66,52 @@ const heroButton =
       soundButton.querySelector('[data-icon="sound"]')?.classList.toggle('hidden', muted);
     };
 
+    const setPlaying = (value: boolean) => {
+      playing = value;
+      if (playing) {
+        iframe.classList.remove('opacity-0');
+        iframe.classList.add('pointer-events-none');
+      }
+      render();
+    };
+
     window.addEventListener('message', (event) => {
       if (event.origin !== VIMEO || event.source !== iframe.contentWindow) return;
-      let data: { event?: string };
+      let data: { event?: string; method?: string; value?: unknown };
       try {
         data = typeof event.data === 'string' ? JSON.parse(event.data) : event.data;
       } catch {
         return;
       }
       if (data.event === 'ready') {
-        for (const name of ['play', 'playing', 'pause', 'volumechange']) {
+        for (const name of ['play', 'playing', 'pause']) {
           post('addEventListener', name);
         }
+        // Puede haber arrancado antes de suscribirnos: se pregunta el estado actual.
+        post('getPaused');
         controls?.removeAttribute('hidden');
       } else if (data.event === 'play' || data.event === 'playing') {
-        playing = true;
+        setPlaying(true);
       } else if (data.event === 'pause') {
-        playing = false;
+        setPlaying(false);
+      } else if (data.method === 'getPaused') {
+        setPlaying(data.value === false);
       }
-      render();
     });
 
+    // Algunos móviles (p. ej. iPhone en modo de bajo consumo) no dejan reproducir aunque se
+    // pida desde el botón. Si no arranca, se enseña el reproductor de Vimeo para que el
+    // visitante lo toque directamente.
+    const tryPlay = () => {
+      post('play');
+      window.setTimeout(() => {
+        if (!playing) iframe.classList.remove('opacity-0', 'pointer-events-none');
+      }, 1500);
+    };
+
     playButton?.addEventListener('click', () => {
-      post(playing ? 'pause' : 'play');
-      playing = !playing;
-      render();
+      if (playing) post('pause');
+      else tryPlay();
     });
 
     soundButton?.addEventListener('click', () => {
@@ -96,10 +119,7 @@ const heroButton =
       post('setMuted', muted);
       post('setVolume', muted ? 0 : 1);
       // Si estaba en pausa y se activa el sonido, se entiende que se quiere ver.
-      if (!muted && !playing) {
-        post('play');
-        playing = true;
-      }
+      if (!muted && !playing) tryPlay();
       render();
     });
 
