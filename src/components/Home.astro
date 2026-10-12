@@ -22,6 +22,8 @@ const langs = Object.keys(languages) as Lang[];
 const formKey = siteConfig.contactFormKey;
 const field =
   'border-bone/60 focus:border-bone w-full border-0 border-b-2 bg-transparent px-0 py-2 font-mono outline-none';
+const heroButton =
+  'border-bone text-bone bg-ink/30 hover:bg-bone hover:text-ink grid size-11 place-items-center rounded-full border-2 backdrop-blur-sm transition-colors md:size-12';
 ---
 
 <script>
@@ -39,6 +41,69 @@ const field =
       'pointer-events-none absolute top-1/2 left-1/2 h-[max(100cqh,75cqw)] w-[max(100cqw,133.34cqh)] -translate-x-1/2 -translate-y-1/2 opacity-0 transition-opacity duration-1000';
     iframe.addEventListener('load', () => iframe.classList.remove('opacity-0'));
     holder.append(iframe);
+
+    // Controles de play/pausa y sonido. Hablan con el reproductor por la API de mensajes de
+    // Vimeo (sin cargar su librería) y el estado de los botones lo marcan los eventos que
+    // devuelve el propio reproductor, por si el navegador bloquea la reproducción automática.
+    const VIMEO = 'https://player.vimeo.com';
+    const controls = document.querySelector<HTMLElement>('[data-hero-controls]');
+    const playButton = controls?.querySelector<HTMLButtonElement>('[data-hero-play]');
+    const soundButton = controls?.querySelector<HTMLButtonElement>('[data-hero-sound]');
+    const post = (method: string, value?: unknown) =>
+      iframe.contentWindow?.postMessage(JSON.stringify({ method, value }), VIMEO);
+
+    let playing = false;
+    let muted = true;
+    const render = () => {
+      if (!controls || !playButton || !soundButton) return;
+      playButton.setAttribute('aria-label', controls.dataset[playing ? 'pause' : 'play'] ?? '');
+      soundButton.setAttribute('aria-label', controls.dataset[muted ? 'unmute' : 'mute'] ?? '');
+      playButton.querySelector('[data-icon="pause"]')?.classList.toggle('hidden', !playing);
+      playButton.querySelector('[data-icon="play"]')?.classList.toggle('hidden', playing);
+      soundButton.querySelector('[data-icon="muted"]')?.classList.toggle('hidden', !muted);
+      soundButton.querySelector('[data-icon="sound"]')?.classList.toggle('hidden', muted);
+    };
+
+    window.addEventListener('message', (event) => {
+      if (event.origin !== VIMEO || event.source !== iframe.contentWindow) return;
+      let data: { event?: string };
+      try {
+        data = typeof event.data === 'string' ? JSON.parse(event.data) : event.data;
+      } catch {
+        return;
+      }
+      if (data.event === 'ready') {
+        for (const name of ['play', 'playing', 'pause', 'volumechange']) {
+          post('addEventListener', name);
+        }
+        controls?.removeAttribute('hidden');
+      } else if (data.event === 'play' || data.event === 'playing') {
+        playing = true;
+      } else if (data.event === 'pause') {
+        playing = false;
+      }
+      render();
+    });
+
+    playButton?.addEventListener('click', () => {
+      post(playing ? 'pause' : 'play');
+      playing = !playing;
+      render();
+    });
+
+    soundButton?.addEventListener('click', () => {
+      muted = !muted;
+      post('setMuted', muted);
+      post('setVolume', muted ? 0 : 1);
+      // Si estaba en pausa y se activa el sonido, se entiende que se quiere ver.
+      if (!muted && !playing) {
+        post('play');
+        playing = true;
+      }
+      render();
+    });
+
+    render();
   }
 </script>
 
@@ -99,16 +164,78 @@ const field =
         </div>
       </div>
 
-      <div class="self-end text-right">
-        <h1 class="ml-auto max-w-[18ch] font-mono text-xl leading-snug md:text-3xl">
-          {t.hero.tagline}
-        </h1>
-        <a
-          href="#contacto"
-          class="border-bone font-nav hover:bg-bone hover:text-ink mt-5 inline-block rounded-full border-2 px-7 py-2.5 text-sm font-bold uppercase transition-colors"
+      <div class="flex items-end justify-between gap-4">
+        <!-- Controles del vídeo de portada: se muestran cuando el reproductor está listo -->
+        <div
+          class="flex gap-3"
+          data-hero-controls
+          data-play={t.hero.video.play}
+          data-pause={t.hero.video.pause}
+          data-mute={t.hero.video.mute}
+          data-unmute={t.hero.video.unmute}
+          hidden
         >
-          {t.hero.cta}
-        </a>
+          <button type="button" class={heroButton} data-hero-play>
+            <svg
+              viewBox="0 0 24 24"
+              class="size-5 fill-current"
+              aria-hidden="true"
+              data-icon="pause"
+            >
+              <path d="M6 4h4v16H6zM14 4h4v16h-4z"></path>
+            </svg>
+            <svg
+              viewBox="0 0 24 24"
+              class="ml-0.5 hidden size-5 fill-current"
+              aria-hidden="true"
+              data-icon="play"
+            >
+              <path d="M6 4l14 8-14 8z"></path>
+            </svg>
+          </button>
+          <button type="button" class={heroButton} data-hero-sound>
+            <svg
+              viewBox="0 0 24 24"
+              class="size-5"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+              data-icon="muted"
+            >
+              <path d="M11 5L6 9H3v6h3l5 4z" fill="currentColor"></path>
+              <path d="M22 9l-6 6M16 9l6 6"></path>
+            </svg>
+            <svg
+              viewBox="0 0 24 24"
+              class="hidden size-5"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+              data-icon="sound"
+            >
+              <path d="M11 5L6 9H3v6h3l5 4z" fill="currentColor"></path>
+              <path d="M15.5 8.5a5 5 0 010 7M19 5a10 10 0 010 14"></path>
+            </svg>
+          </button>
+        </div>
+
+        <div class="ml-auto text-right">
+          <h1 class="ml-auto max-w-[18ch] font-mono text-xl leading-snug md:text-3xl">
+            {t.hero.tagline}
+          </h1>
+          <a
+            href="#contacto"
+            class="border-bone font-nav hover:bg-bone hover:text-ink mt-5 inline-block rounded-full border-2 px-7 py-2.5 text-sm font-bold uppercase transition-colors"
+          >
+            {t.hero.cta}
+          </a>
+        </div>
       </div>
     </div>
 

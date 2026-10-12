@@ -30,6 +30,12 @@ const es = {
   hero: {
     tagline: 'Damos forma a lo que todavía no se ve',
     cta: 'Empieza tu proyecto',
+    video: {
+      play: 'Reproducir el vídeo',
+      pause: 'Pausar el vídeo',
+      mute: 'Silenciar el vídeo',
+      unmute: 'Activar el sonido del vídeo',
+    },
   },
   team: {
     heading: 'Construimos mundos visuales',
@@ -93,6 +99,12 @@ const en: Dictionary = {
   hero: {
     tagline: 'We shape what isn’t visible yet',
     cta: 'Start your project',
+    video: {
+      play: 'Play video',
+      pause: 'Pause video',
+      mute: 'Mute video',
+      unmute: 'Unmute video',
+    },
   },
   team: {
     heading: 'We build visual worlds',
