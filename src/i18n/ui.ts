@@ -66,6 +66,7 @@ const es = {
     next: 'Trabajo siguiente',
   },
   story: 'Contemos tu historia',
+  toTop: 'Volver arriba',
   contact: {
     label: 'Contacto',
     cityNote: '/ trabajando internacionalmente',
@@ -135,6 +136,7 @@ const en: Dictionary = {
     next: 'Next work',
   },
   story: 'Let’s tell your story',
+  toTop: 'Back to top',
   contact: {
     label: 'Contact',
     cityNote: '/ working internationally',

@@ -16,7 +16,7 @@ export const siteConfig = {
   },
   /** Vídeo de Vimeo que se reproduce de fondo, en silencio y en bucle, en la portada. */
   heroVideoId: '1182737117',
-  team: ['Jorge Yumar', 'Selene Rodríguez'],
+  team: ['Jorge Rodríguez', 'Selene Rodríguez'],
   /** Clave de acceso de Web3Forms. Se inyecta en build desde un secreto del repositorio. */
   contactFormKey: import.meta.env.PUBLIC_WEB3FORMS_KEY ?? '',
 } as const;
