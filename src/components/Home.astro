@@ -25,22 +25,16 @@ const field =
 ---
 
 <script>
-  // El vídeo de portada no se carga si el visitante pide menos movimiento o ahorro de datos:
-  // en ese caso se queda la foto fija.
+  // Vídeo de portada: se inyecta por script para que la foto se pinte primero como póster.
   const holder = document.querySelector<HTMLElement>('[data-hero-video]');
-  const saveData = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection
-    ?.saveData;
-  if (
-    holder?.dataset.heroVideo &&
-    !saveData &&
-    !matchMedia('(prefers-reduced-motion: reduce)').matches
-  ) {
+  if (holder?.dataset.heroVideo) {
     const iframe = document.createElement('iframe');
     iframe.src = holder.dataset.heroVideo;
     iframe.title = '';
     iframe.tabIndex = -1;
-    iframe.allow = 'autoplay; fullscreen';
-    // Vídeo 4:3 escalado para cubrir todo el hero (equivalente a object-fit: cover).
+    iframe.allow = 'autoplay; fullscreen; picture-in-picture';
+    iframe.setAttribute('playsinline', '');
+    // Vídeo 4:3 escalado para cubrir su caja (equivalente a object-fit: cover).
     iframe.className =
       'pointer-events-none absolute top-1/2 left-1/2 h-[max(100cqh,75cqw)] w-[max(100cqw,133.34cqh)] -translate-x-1/2 -translate-y-1/2 opacity-0 transition-opacity duration-1000';
     iframe.addEventListener('load', () => iframe.classList.remove('opacity-0'));
@@ -51,21 +45,29 @@ const field =
 <Layout lang={lang} home>
   <!-- Inicio: foto a sangre, menú arriba a la izquierda y lema abajo a la derecha -->
   <section id="inicio" class="relative overflow-hidden">
-    <Image
-      src={hero}
-      alt=""
-      widths={[480, 830]}
-      sizes="100vw"
-      loading="eager"
-      fetchpriority="high"
-      class="absolute inset-0 h-full w-full object-cover object-[50%_25%]"
-    />
-    <!-- Vídeo de fondo: se inyecta por script encima de la foto, que hace de póster -->
+    <!--
+      Caja del vídeo: en móvil ocupa el ancho de la pantalla en su proporción 4:3 (se ve
+      entero); desde tablet cubre todo el hero.
+    -->
     <div
-      class="[container-type:size] absolute inset-0 overflow-hidden"
-      data-hero-video={`https://player.vimeo.com/video/${siteConfig.heroVideoId}?background=1&dnt=1`}
-      aria-hidden="true"
+      class="absolute inset-x-0 top-[45%] aspect-video -translate-y-1/2 md:inset-0 md:aspect-auto md:translate-y-0"
     >
+      <Image
+        src={hero}
+        alt=""
+        widths={[480, 830]}
+        sizes="100vw"
+        loading="eager"
+        fetchpriority="high"
+        class="absolute inset-0 h-full w-full object-cover object-[50%_25%]"
+      />
+      <!-- Vídeo de fondo: se inyecta por script encima de la foto, que hace de póster -->
+      <div
+        class="[container-type:size] absolute inset-0 overflow-hidden"
+        data-hero-video={`https://player.vimeo.com/video/${siteConfig.heroVideoId}?background=1&autoplay=1&muted=1&loop=1&playsinline=1&dnt=1`}
+        aria-hidden="true"
+      >
+      </div>
     </div>
     <div class="from-ink/70 absolute inset-0 bg-linear-to-t via-transparent to-transparent"></div>
     <!-- Oscurece la parte de arriba para que el menú y el logo se lean sobre cualquier fotograma -->
@@ -121,7 +123,7 @@ const field =
     <SectionNav lang={lang} active="equipo" repeat />
 
     <h2
-      class="font-display mt-10 text-center text-[clamp(3.2rem,9vw,8.5rem)] leading-[0.9] uppercase md:mt-0"
+      class="font-display mt-10 text-center text-[clamp(3.2rem,9vw,8.5rem)] leading-[0.9] uppercase md:mt-12"
     >
       {t.team.heading}
     </h2>
@@ -166,14 +168,16 @@ const field =
 
   <!-- Trabajos -->
   <section id="trabajos" class="bg-red text-bone relative overflow-hidden pt-4 pb-40 md:pb-56">
-    <div class="relative px-5 md:px-10">
-      <SectionNav lang={lang} active="trabajos" repeat class="absolute top-6 left-5 md:left-10" />
+    <div class="px-5 pt-4 md:px-10">
+      <div class="flex items-start justify-between">
+        <SectionNav lang={lang} active="trabajos" repeat />
+        <Logo class="text-4xl md:text-6xl" />
+      </div>
       <h2
-        class="font-display pt-24 text-center text-[clamp(4.5rem,14vw,15rem)] leading-[0.85] uppercase md:pt-0"
+        class="font-display mt-8 text-center text-[clamp(4.5rem,14vw,15rem)] leading-[0.85] uppercase md:mt-4"
       >
         {t.work.title}
       </h2>
-      <Logo class="absolute top-6 right-5 hidden text-4xl md:right-10 md:inline-flex md:text-6xl" />
     </div>
 
     <div class="mt-8">
